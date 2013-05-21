@@ -1,1 +1,1 @@
-coherent neutrino-nucleus scattering
+cnns - coherent neutrino-nucleus scattering
