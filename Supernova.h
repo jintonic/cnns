@@ -12,9 +12,11 @@ class Supernova : public Source
 
    public:
       Supernova(NakazatoModel *model=0) 
-         : Source(), fModel(model)
-      { if (model) fName=model->GetName(); fTitle=model->GetTitle(); }
+         : Source(), fModel(0) { if (model) SetModel(model); }
       virtual ~Supernova() {};
+
+      void SetModel(NakazatoModel *model);
+      NakazatoModel* Model() { return fModel; }
 
       Double_t N2(UShort_t type, Double_t energy, Double_t time);
       Double_t Ne(UShort_t type, Double_t energy);

@@ -25,3 +25,10 @@ Double_t Supernova::Ne(UShort_t type, Double_t energy)
 
 //______________________________________________________________________________
 //
+
+void Supernova::SetModel(NakazatoModel *model)
+{
+   fModel = model;
+   fName  = model->GetName();
+   fTitle = model->GetTitle();
+}
