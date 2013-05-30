@@ -1,8 +1,10 @@
 # Dependence
 # ==========
 
-SNVDDIR=../snvd
-MADDIR=../mad
+TOTAL=$(HOME)
+NEUS=$(HOME)
+MAD=$(HOME)
+UNIC=$(HOME)
 
 
 # Define CXX, CXXFLAGS, SOFLAGS & LIBS
@@ -52,8 +54,8 @@ endif
 
 # Finally, define CXXFLAGS & LIBS
 CXXFLAGS+= $(ROOTCFLAGS)
-CXXFLAGS+= -I$(SNVDDIR) -I$(MADDIR) -g
-LIBS     = $(ROOTLIBS) -L$(SNVDDIR) -lSNVD -L$(MADDIR) -lMad
+CXXFLAGS+= -I$(UNIC)/include -I$(NEUS)/include -I$(MAD)/include -g
+LIBS     = $(ROOTLIBS) -L$(NEUS)/lib -lNEUS -lTOTAL -L$(MAD) -lMAD
 
 
 # Define things related to rootcint
@@ -69,6 +71,9 @@ ROOTIFIED_OBJECT := $(ROOTIFIED_SOURCE:.cc=.o)
 
 # Define SOURCES, HEADERS & OBJECTS 
 # ==========================================
+
+SRCS = $(wildcard *.C)
+EXES = $(SRCS:.C=.exe)
 
 SOURCES = $(filter-out $(ROOTIFIED_SOURCE), $(wildcard *.cc))
 HEADERS = $(SOURCES:.cc=.h)
@@ -104,7 +109,7 @@ RLIBMAP = rlibmap
 # the first target is the default target, it depends on $(ROOTMAP)
 # before "make all", make will include all other makefiles specified
 # by the include command
-all: $(ROOTMAP)
+all: $(ROOTMAP) $(EXES)
 	@echo
 	@echo "* Done!"
 	@echo 
@@ -130,6 +135,8 @@ $(ROOTMAP): $(LIBRARY)
 	@echo
 	@echo "* Creating rootmap file:"
 	$(RLIBMAP) -o $(ROOTMAP) -l $(LIBRARY) -d $(DEPENDS) -c $(LINKDEF)
+	@echo
+	@echo "* Compile executables:"
 
 # lib$(LIBNAME).so depends on all *.o files.
 #  The flag "-shared" is used to create shared libs
@@ -172,7 +179,7 @@ clean:
 tags:
 	ctags --c-kinds=+p $(HEADERS) $(SOURCES)
 
-%.exe:%.C
+$(EXES):%.exe:%.C
 	$(CXX) $< $(CXXFLAGS) $(LIBS) -lGeom -L. -l$(LIBNAME) -o $@
 
 .PHONY: all info tags clean
