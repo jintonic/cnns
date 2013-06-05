@@ -1,16 +1,18 @@
+#include <NEUS/SupernovaModel.h>
+using namespace NEUS;
+
 #include "Supernova.h"
 
-#include <CLHEP/Units/SystemOfUnits.h>
-using namespace CLHEP;
+#include <UNIC/Units.h>
+using namespace UNIC;
 
 //______________________________________________________________________________
 //
 
-Double_t Supernova::N2(UShort_t type, Double_t energy, Double_t time)
+Double_t Supernova::N2(UShort_t type, Double_t time, Double_t energy)
 {
    if (!fModel) return 0;
-   TH2D *h = fModel->H2N(type);
-   return h->Interpolate(energy/MeV, time/second);
+   return fModel->N2(type, time/second, energy/MeV);
 }
 
 //______________________________________________________________________________
@@ -19,14 +21,24 @@ Double_t Supernova::N2(UShort_t type, Double_t energy, Double_t time)
 Double_t Supernova::Ne(UShort_t type, Double_t energy)
 {
    if (!fModel) return 0;
-   TH1D *h = fModel->HNe(type);
-   return h->Interpolate(energy/MeV);
+   //Printf("type: %d energy: %f MeV, Ne: %e", type, energy/MeV,
+         //fModel->Ne(type, energy/MeV));
+   return fModel->Ne(type, energy/MeV);
 }
 
 //______________________________________________________________________________
 //
 
-void Supernova::SetModel(NakazatoModel *model)
+Double_t Supernova::Nt(UShort_t type, Double_t time)
+{
+   if (!fModel) return 0;
+   return fModel->Ne(type, time/second);
+}
+
+//______________________________________________________________________________
+//
+
+void Supernova::SetModel(SupernovaModel *model)
 {
    fModel = model;
    fName  = model->GetName();
