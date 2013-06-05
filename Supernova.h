@@ -1,27 +1,28 @@
-#ifndef SUPERNOVA_HH
-#define SUPERNOVA_HH
-
-#include <NakazatoModel.h>
+#ifndef SUPERNOVA_H
+#define SUPERNOVA_H
 
 #include "Source.h"
+
+namespace NEUS { class SupernovaModel; }
 
 class Supernova : public Source
 {
    protected:
-      NakazatoModel *fModel;
+      NEUS::SupernovaModel *fModel;
 
    public:
-      Supernova(NakazatoModel *model=0) 
+      Supernova(NEUS::SupernovaModel *model=0) 
          : Source(), fModel(0) { if (model) SetModel(model); }
       virtual ~Supernova() {};
 
-      void SetModel(NakazatoModel *model);
-      NakazatoModel* Model() { return fModel; }
+      void SetModel(NEUS::SupernovaModel *model);
+      NEUS::SupernovaModel* Model() { return fModel; }
 
-      Double_t N2(UShort_t type, Double_t energy, Double_t time);
+      Double_t N2(UShort_t type, Double_t time, Double_t energy);
       Double_t Ne(UShort_t type, Double_t energy);
+      Double_t Nt(UShort_t type, Double_t time);
 
       ClassDef(Supernova,1);
 };
 
-#endif // SUPERNOVA_HH
+#endif
