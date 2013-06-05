@@ -1,17 +1,20 @@
-#ifndef EXPERIMENT_HH
-#define EXPERIMENT_HH
+#ifndef EXPERIMENT_H
+#define EXPERIMENT_H
 
-class TGeoMaterial;
+#include <TObject.h>
+class TF1;
+
+#include <UNIC/Units.h>
+
 class Source;
-#include <TF1.h>
 
-#include <CLHEP/Units/SystemOfUnits.h>
+namespace MAD { class Material; }
 
 class Experiment : public TObject
 {
    protected:
       Source *fSource; // source of neutrino
-      TGeoMaterial *fMaterial; // target material
+      MAD::Material *fMaterial; // target material
       Double_t fMass;      // mass of target material
       Double_t fThreshold; // energy threshold of detector
 
@@ -22,14 +25,14 @@ class Experiment : public TObject
       Double_t FuncN(Double_t *x, Double_t *parameter); // function of Nevt
 
    public:
-      Experiment(TGeoMaterial *material=0, Source *source=0);
+      Experiment(MAD::Material *material=0, Source *source=0);
       virtual ~Experiment(); 
 
       // in case of reactor, it gives Nevt/keVnr/second
       // in case of supernova, it gives Nevt/keVnr in 20 second
       Double_t Nevt(UShort_t type,
             Double_t nuclearRecoilEnergy, 
-            Double_t maxNeutrinoEnergy=100*CLHEP::MeV);
+            Double_t maxNeutrinoEnergy=100*UNIC::MeV);
 
       void SetTargetMass(Double_t m) { fMass=m; }
       Double_t TargetMass() { return fMass; }
@@ -37,21 +40,22 @@ class Experiment : public TObject
       void SetThreshold(Double_t threshold) { fThreshold=threshold; }
       Double_t Threshold() { return fThreshold; }
 
-      void SetTargetMaterial(TGeoMaterial *material) { fMaterial=material; }
-      TGeoMaterial* TargetMaterial() { return fMaterial; }
+      void SetTargetMaterial(MAD::Material *material) { fMaterial=material; }
+      MAD::Material* TargetMaterial() { return fMaterial; }
 
-      void SetSource(Source *source) { fSource=source; }
+      void SetNeutrinoSource(Source *source) { fSource=source; }
       Source* NeutrinoSource() { return fSource; }
 
       TF1* FXSxNe(UShort_t type=1, 
-            Double_t nuclearRecoilEnergy=5*CLHEP::keV,
-            Double_t maxNeutrinoEnergy=100*CLHEP::MeV);
+            Double_t nuclearRecoilEnergy=5*UNIC::keV,
+            Double_t minNeutrinoEnergy= 2.5*UNIC::MeV,
+            Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       TF1* FNevt(UShort_t type=1,
-            Double_t maxNuclearRecoilEnergy=25*CLHEP::keV,
-            Double_t maxNeutrinoEnergy=100*CLHEP::MeV);
+            Double_t maxNuclearRecoilEnergy=25*UNIC::keV,
+            Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       ClassDef(Experiment,1);
 };
 
-#endif //EXPERIMENT_HH
+#endif
