@@ -2,20 +2,23 @@
 
 #include "Source.h"
 
-#include <Element.h>
+#include <MAD/Element.h>
+#include <MAD/Material.h>
+using namespace MAD;
 
+#include <TF1.h>
 #include <TAxis.h>
-#include <TGeoMaterial.h>
 #include <TMath.h>
 using namespace TMath;
 
-#include <CLHEP/Units/PhysicalConstants.h>
-using namespace CLHEP;
+#include <UNIC/Units.h>
+#include <UNIC/Constants.h>
+using namespace UNIC;
 
 //______________________________________________________________________________
 //
 
-Experiment::Experiment(TGeoMaterial *material, Source *source) : 
+Experiment::Experiment(Material *material, Source *source) : 
    TObject(), fSource(source), fMaterial(material), fMass(0), fThreshold(0)
 {
    for (UShort_t i=0; i<7; i++) {
@@ -47,11 +50,8 @@ Double_t Experiment::XSxNe(Double_t *x, Double_t *parameter)
    Element *element = (Element*) fMaterial->GetElement();
    Double_t dXS = element->CNNSdXS(Er, Ev);
 
-   if (type<1 || type>6) {
-      Double_t total = 0;
-      for (UShort_t i=1; i<=6; i++) total += fSource->Ne(i,Ev);
-      return dXS * total;
-   }
+   if (type<1 || type>6)
+      return dXS*(fSource->Ne(1,Ev) + fSource->Ne(2,Ev) + 4*fSource->Ne(3,Ev));
 
    return dXS * fSource->Ne(type,Ev);
 }
@@ -65,7 +65,7 @@ Double_t Experiment::FuncN(Double_t *x, Double_t *parameter)
       Warning("Nevt", "Please set targe material!");
       return 0;
    }
-   if (fMaterial->GetNelements()!=1) {
+   if (fMaterial->Nelements()!=1) {
       Warning("Nevt", "Can only handle material with one element!");
       return 0;
    }
@@ -79,14 +79,15 @@ Double_t Experiment::FuncN(Double_t *x, Double_t *parameter)
    UShort_t type = static_cast<UShort_t>(parameter[1]); // type of neutrino
 
    Element *element = (Element*) fMaterial->GetElement();
-   Double_t atomicMass  = element->A()*gram/mole;
+   Double_t atomicMass  = element->A();
    Double_t nNuclei = fMass/atomicMass*Avogadro;
    Double_t distance = fSource->Distance()/hbarc;
    Double_t area = 4*pi*distance*distance;
    Double_t minEv = (Er + Sqrt(2*element->M()*Er))/2;
 
-   TF1 *f = FXSxNe(type,Er,maxEv);
-   return nNuclei/area*f->Integral(minEv/MeV, maxEv/MeV)*keV;
+   //Printf("Er: %f keV, minEv: %f MeV, maxEv: %f MeV ==========", x[0], minEv, maxEv);
+   TF1 *f = FXSxNe(type,Er,minEv,maxEv);
+   return nNuclei/area*1e50*f->Integral(minEv/MeV, maxEv/MeV)*keV;
 }
 
 //______________________________________________________________________________
@@ -137,19 +138,19 @@ TF1* Experiment::FNevt(UShort_t type,
 //______________________________________________________________________________
 //
 
-TF1* Experiment::FXSxNe(UShort_t type,
-      Double_t nuclearRecoilEnergy, Double_t maxNeutrinoEnergy)
+TF1* Experiment::FXSxNe(UShort_t type, Double_t nuclearRecoilEnergy,
+      Double_t minNeutrinoEnergy, Double_t maxNeutrinoEnergy)
 {
    if (fXSxNe[type]) {
-      fXSxNe[type]->SetRange(0,maxNeutrinoEnergy/MeV);
+      fXSxNe[type]->SetRange(minNeutrinoEnergy/MeV,maxNeutrinoEnergy/MeV);
       fXSxNe[type]->SetParameter(0,nuclearRecoilEnergy/keV);
       fXSxNe[type]->SetParameter(1,type);
       return fXSxNe[type];
    }
 
    fXSxNe[type] = new TF1(Form("fXSxNe_%s_%s_%f_%d",
-            fSource->GetName(), fMaterial->GetName(), fMass, type),
-         this, &Experiment::XSxNe, 0, maxNeutrinoEnergy/MeV,2);
+            fSource->GetName(), fMaterial->GetName(), fMass, type), this, 
+         &Experiment::XSxNe, minNeutrinoEnergy/MeV, maxNeutrinoEnergy/MeV,2);
    fXSxNe[type]->SetParameter(0,nuclearRecoilEnergy/keV);
    fXSxNe[type]->SetParameter(1,type);
    fXSxNe[type]->GetXaxis()->SetTitle("neutrino energy [MeV]");
