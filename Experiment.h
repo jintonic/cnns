@@ -3,6 +3,7 @@
 
 #include <TObject.h>
 class TF1;
+class TH1D;
 
 #include <UNIC/Units.h>
 
@@ -52,6 +53,15 @@ class Experiment : public TObject
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       TF1* FNevt(UShort_t type=1,
+            Double_t maxNuclearRecoilEnergy=25*UNIC::keV,
+            Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
+
+      TH1D* HXSxNe(UShort_t type=1,
+            Double_t nuclearRecoilEnergy=5*UNIC::keV,
+            Double_t minNeutrinoEnergy= 2.5*UNIC::MeV,
+            Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
+
+      TH1D* HNevt(UShort_t type=1,
             Double_t maxNuclearRecoilEnergy=25*UNIC::keV,
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
