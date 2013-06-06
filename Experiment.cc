@@ -119,17 +119,17 @@ TF1* Experiment::FNevt(UShort_t type,
          this, &Experiment::FuncN, 0, maxNuclearRecoilEnergy/keV,2);
    fNevt[type]->SetParameter(0,maxNeutrinoEnergy/MeV);
    fNevt[type]->SetParameter(1,type);
-   fNevt[type]->GetXaxis()->SetTitle("nuclear recoil energy [keV]");
-   fNevt[type]->GetYaxis()->
-      SetTitle(Form("events/(keV #times %.0f kg #times 20 s)", fMass/kg));
 
    if (type==0) {
-      fNevt[type]->SetTitle(Form("%s", fSource->GetTitle()));
+      fNevt[type]->SetTitle(Form(
+               "%s;nuclear recoil energy [keV];total events/(keV #times %.0f kg)",
+               fSource->GetTitle(), fMass/kg));
       fNevt[type]->SetLineColor(kGray+2);
       fNevt[type]->SetLineWidth(2);
    } else {
-      fNevt[type]->SetTitle(
-            Form("%s, type of neutrino: %d", fSource->GetTitle(), type));
+      fNevt[type]->SetTitle(Form(
+               "%s, type of neutrino: %d;nuclear recoil energy [keV];total events/(keV #times %.0f kg)",
+               fSource->GetTitle(), type, fMass/kg));
       fNevt[type]->SetLineColor(type);
    }
    return fNevt[type];
@@ -153,19 +153,42 @@ TF1* Experiment::FXSxNe(UShort_t type, Double_t nuclearRecoilEnergy,
          &Experiment::XSxNe, minNeutrinoEnergy/MeV, maxNeutrinoEnergy/MeV,2);
    fXSxNe[type]->SetParameter(0,nuclearRecoilEnergy/keV);
    fXSxNe[type]->SetParameter(1,type);
-   fXSxNe[type]->GetXaxis()->SetTitle("neutrino energy [MeV]");
-   fXSxNe[type]->GetYaxis()->SetTitle("1/MeV^{4}");
 
    if (type==0) {
-      fXSxNe[type]->SetTitle(Form("neutrinos from %s, target: %s", 
-               fSource->GetName(), fMaterial->GetTitle()));
+      fXSxNe[type]->SetTitle(Form(
+               "%s, target: %s, recoil energy: %.1f keV;neutrino energy [MeV];1/MeV^{4}", 
+               fSource->GetName(), fMaterial->GetTitle(), 
+               nuclearRecoilEnergy/keV));
       fXSxNe[type]->SetLineColor(kGray+2);
       fXSxNe[type]->SetLineWidth(2);
    } else {
-      fXSxNe[type]->SetTitle(Form("neutrino %d from %s, target: %s", 
+      fXSxNe[type]->SetTitle(Form(
+               "neutrino %d from %s, target: %s;neutrino energy [MeV];1/MeV^{4}", 
                type, fSource->GetName(), fMaterial->GetTitle()));
       fXSxNe[type]->SetLineColor(type);
    }
    return fXSxNe[type];
+}
+
+//______________________________________________________________________________
+//
+
+TH1D* Experiment::HNevt(UShort_t type,
+      Double_t maxNuclearRecoilEnergy, Double_t maxNeutrinoEnergy)
+{
+   TH1D *h = (TH1D*) 
+      FNevt(type,maxNuclearRecoilEnergy,maxNeutrinoEnergy)->GetHistogram();
+   return h;
+}
+
+//______________________________________________________________________________
+//
+
+TH1D* Experiment::HXSxNe(UShort_t type, Double_t nuclearRecoilEnergy,
+      Double_t minNeutrinoEnergy, Double_t maxNeutrinoEnergy)
+{
+   TH1D *h = (TH1D*) FXSxNe(type, nuclearRecoilEnergy, 
+         minNeutrinoEnergy, maxNeutrinoEnergy)->GetHistogram();
+   return h;
 }
 
