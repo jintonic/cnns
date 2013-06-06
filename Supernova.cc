@@ -1,7 +1,9 @@
+#include "Supernova.h"
+
+#include <TH1D.h>
+
 #include <NEUS/SupernovaModel.h>
 using namespace NEUS;
-
-#include "Supernova.h"
 
 #include <UNIC/Units.h>
 using namespace UNIC;
@@ -21,9 +23,11 @@ Double_t Supernova::N2(UShort_t type, Double_t time, Double_t energy)
 Double_t Supernova::Ne(UShort_t type, Double_t energy)
 {
    if (!fModel) return 0;
-   //Printf("type: %d energy: %f MeV, Ne: %e", type, energy/MeV,
-         //fModel->Ne(type, energy/MeV));
-   return fModel->Ne(type, energy/MeV);
+   //return fModel->Ne(type, energy/MeV); // too slow for integration
+   if (fUseFermiDiracApproximation)
+      return fModel->HNeFD(type)->Interpolate(energy/MeV);
+   else
+      return fModel->HNe(type, fModel->TMax())->Interpolate(energy/MeV);
 }
 
 //______________________________________________________________________________
@@ -32,7 +36,8 @@ Double_t Supernova::Ne(UShort_t type, Double_t energy)
 Double_t Supernova::Nt(UShort_t type, Double_t time)
 {
    if (!fModel) return 0;
-   return fModel->Ne(type, time/second);
+   //return fModel->Ne(type, time/second); // too slow for integration
+   return fModel->HNt(type)->Interpolate(time/second);
 }
 
 //______________________________________________________________________________
