@@ -24,7 +24,7 @@ Double_t Supernova::Ne(UShort_t type, Double_t energy)
 {
    if (!fModel) return 0;
    //return fModel->Ne(type, energy/MeV); // too slow for integration
-   if (fUseFermiDiracApproximation)
+   if (fModel->GetName()[0]=='D')
       return fModel->HNeFD(type)->Interpolate(energy/MeV);
    else
       return fModel->HNe(type, fModel->TMax())->Interpolate(energy/MeV);
