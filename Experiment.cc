@@ -30,17 +30,6 @@ Experiment::Experiment(Material *material, Source *source) :
 //______________________________________________________________________________
 //
 
-Experiment::~Experiment() 
-{
-   for (UShort_t i=0; i<7; i++) {
-      if (fNevt[i]) delete fNevt[i];
-      if (fXSxNe[i]) delete fXSxNe[i];
-   }
-}
-
-//______________________________________________________________________________
-//
-
 Double_t Experiment::XSxNe(Double_t *x, Double_t *parameter)
 {
    Double_t Ev = x[0]*MeV; // neutrino energy
@@ -108,9 +97,16 @@ TF1* Experiment::FNevt(UShort_t type,
       Double_t maxNuclearRecoilEnergy, Double_t maxNeutrinoEnergy)
 {
    if (fNevt[type]) {
-      fNevt[type]->SetRange(0,maxNuclearRecoilEnergy/keV);
-      fNevt[type]->SetParameter(0,maxNeutrinoEnergy/MeV);
-      fNevt[type]->SetParameter(1,type);
+      Double_t min, max;
+      fNevt[type]->GetRange(min,max);
+      if (max!=maxNuclearRecoilEnergy/keV) {
+         Info("FNevt","Reset range of recoil energy.");
+         fNevt[type]->SetRange(0,maxNuclearRecoilEnergy/keV);
+      }
+      if (fNevt[type]->GetParameter(0)!=maxNeutrinoEnergy/MeV) {
+         Info("FNevt","Reset maximal neutrino energy.");
+         fNevt[type]->SetParameter(0,maxNeutrinoEnergy/MeV);
+      }
       return fNevt[type];
    }
 
@@ -144,11 +140,10 @@ TF1* Experiment::FXSxNe(UShort_t type, Double_t nuclearRecoilEnergy,
    if (fXSxNe[type]) {
       fXSxNe[type]->SetRange(minNeutrinoEnergy/MeV,maxNeutrinoEnergy/MeV);
       fXSxNe[type]->SetParameter(0,nuclearRecoilEnergy/keV);
-      fXSxNe[type]->SetParameter(1,type);
       return fXSxNe[type];
    }
 
-   fXSxNe[type] = new TF1(Form("fXSxNe_%s_%s_%f_%d",
+   fXSxNe[type] = new TF1(Form("fXSxNe%s%s%f%d",
             fSource->GetName(), fMaterial->GetName(), fMass, type), this, 
          &Experiment::XSxNe, minNeutrinoEnergy/MeV, maxNeutrinoEnergy/MeV,2);
    fXSxNe[type]->SetParameter(0,nuclearRecoilEnergy/keV);
@@ -190,5 +185,22 @@ TH1D* Experiment::HXSxNe(UShort_t type, Double_t nuclearRecoilEnergy,
    TH1D *h = (TH1D*) FXSxNe(type, nuclearRecoilEnergy, 
          minNeutrinoEnergy, maxNeutrinoEnergy)->GetHistogram();
    return h;
+}
+
+//______________________________________________________________________________
+//
+
+void Experiment::Clear(Option_t *option)
+{
+   for (UShort_t i=0; i<7; i++) {
+      if (fNevt[i]) {
+         delete fNevt[i];
+         fNevt[i]=NULL;
+      }
+      if (fXSxNe[i]) {
+         delete fXSxNe[i];
+         fXSxNe[i]=NULL;
+      }
+   }
 }
 
