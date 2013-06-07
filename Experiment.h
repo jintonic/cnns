@@ -33,7 +33,7 @@ class Experiment : public TObject
       // in case of supernova, it gives Nevt/keVnr in 20 second
       Double_t Nevt(UShort_t type,
             Double_t nuclearRecoilEnergy, 
-            Double_t maxNeutrinoEnergy=100*UNIC::MeV);
+            Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       void SetTargetMass(Double_t m) { fMass=m; }
       Double_t TargetMass() { return fMass; }
@@ -53,7 +53,7 @@ class Experiment : public TObject
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       TF1* FNevt(UShort_t type=1,
-            Double_t maxNuclearRecoilEnergy=25*UNIC::keV,
+            Double_t maxNuclearRecoilEnergy=50*UNIC::keV,
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       TH1D* HXSxNe(UShort_t type=1,
@@ -62,7 +62,7 @@ class Experiment : public TObject
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       TH1D* HNevt(UShort_t type=1,
-            Double_t maxNuclearRecoilEnergy=25*UNIC::keV,
+            Double_t maxNuclearRecoilEnergy=50*UNIC::keV,
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
 
       /**
