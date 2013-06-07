@@ -27,7 +27,7 @@ class Experiment : public TObject
 
    public:
       Experiment(MAD::Material *material=0, Source *source=0);
-      virtual ~Experiment(); 
+      virtual ~Experiment() { Clear(); } 
 
       // in case of reactor, it gives Nevt/keVnr/second
       // in case of supernova, it gives Nevt/keVnr in 20 second
@@ -64,6 +64,11 @@ class Experiment : public TObject
       TH1D* HNevt(UShort_t type=1,
             Double_t maxNuclearRecoilEnergy=25*UNIC::keV,
             Double_t maxNeutrinoEnergy=82.5*UNIC::MeV);
+
+      /**
+       * Delete internal TF1 objects.
+       */
+      void Clear(Option_t *option="");
 
       ClassDef(Experiment,1);
 };
