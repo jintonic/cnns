@@ -88,46 +88,123 @@ int main ()
 
    can->Print("SNvInXMASS.ps");
 
-   //can->SetLogy();
-   //TF1 *f = xmass->FNevt(0,50*keV);
-   ////f->SetNpx(100);
-   //f->Draw();
-   ////f->GetHistogram()->Draw("histsame");
-   //TF1 *fv1 = xmass->FNevt(1,50*keV);
-   //fv1->Draw("same");
-   //TF1 *fv2 = xmass->FNevt(2,50*keV);
-   //fv2->Draw("same");
-   //TF1 *fv3 = xmass->FNevt(3,50*keV);
-   //fv3->Draw("same");
+   // Divari approximation
+   h0 = xmass->HNevt(0,50*keV);
+   h1 = xmass->HNevt(1,50*keV);
+   h2 = xmass->HNevt(2,50*keV);
+   h3 = xmass->HNevt(3,50*keV);
 
-   //can->Print("SNvInXMASS.ps");
+   h0->GetYaxis()->SetRangeUser(0,10);
+   h0->Draw();
+   h2->Draw("same");
+   h1->Draw("same");
+   h3->Draw("same");
 
-   //Printf("number of events: %f",f->GetHistogram()->Integral(7,100)*0.5);
-   
-   //can->SetLogy(0);
-   //xmass1->FXSxNe(0)->Draw();
-   //xmass1->FXSxNe(1)->Draw("same");
-   //xmass1->FXSxNe(2)->Draw("same");
-   //xmass1->FXSxNe(3)->Draw("same");
-   //can->Print("SNvInXMASS.ps");
+   leg->Draw();
+   can->Print("SNvInXMASS.ps");
 
-   //can->SetLogy();
-   //TF1 *f = xmass1->FNevt(0,50*keV);
-   //f->SetNpx(100);
-   //f->Draw();
-   //f->GetHistogram()->Draw("hist");
-   //fv1 = xmass1->FNevt(1,50*keV);
-   //fv1->Draw("same");
-   //fv2 = xmass1->FNevt(2,50*keV);
-   //fv2->Draw("same");
-   //fv3 = xmass1->FNevt(3,50*keV);
-   //fv3->Draw("same");
+   Printf("number of events in Divari approximation: %f",
+         h0->Integral(3*2+1,50*2)*0.5);
 
-   //leg->Draw();
+   // Totani's Livermore model
+   sn->SetModel(totani);
+   xmass->Clear(); // clear internal functions
+   h0 = xmass->HNevt(0,50*keV);
+   h1 = xmass->HNevt(1,50*keV);
+   h2 = xmass->HNevt(2,50*keV);
+   h3 = xmass->HNevt(3,50*keV);
 
-   //can->Print("SNvInXMASS.ps");
+   h0->GetYaxis()->SetRangeUser(0,10);
+   h0->Draw();
+   h2->Draw("same");
+   h1->Draw("same");
+   h3->Draw("same");
 
-   //Printf("number of events: %f",f->GetHistogram()->Integral(7,100)*0.5);
+   leg->Draw();
+   can->Print("SNvInXMASS.ps");
+
+   Printf("number of events in Livermore model: %f",
+         h0->Integral(3*2+1,50*2)*0.5);
+
+   // weakest Nakazato Model
+   sn->SetModel(model2001);
+   xmass->Clear(); // clear internal functions
+   h0 = xmass->HNevt(0,50*keV);
+   h1 = xmass->HNevt(1,50*keV);
+   h2 = xmass->HNevt(2,50*keV);
+   h3 = xmass->HNevt(3,50*keV);
+
+   h0->GetYaxis()->SetRangeUser(0,10);
+   h0->Draw();
+   h2->Draw("same");
+   h1->Draw("same");
+   h3->Draw("same");
+
+   leg->Draw();
+   can->Print("SNvInXMASS.ps");
+
+   Printf("number of events in Nakazato model 2001: %f",
+         h0->Integral(3*2+1,50*2)*0.5);
+
+   // weakest Nakazato Model
+   sn->SetModel(model2001);
+   xmass->Clear(); // clear internal functions
+   h0 = xmass->HNevt(0,50*keV);
+   h1 = xmass->HNevt(1,50*keV);
+   h2 = xmass->HNevt(2,50*keV);
+   h3 = xmass->HNevt(3,50*keV);
+
+   h0->GetYaxis()->SetRangeUser(0,10);
+   h0->Draw();
+   h2->Draw("same");
+   h1->Draw("same");
+   h3->Draw("same");
+
+   leg->Draw();
+   can->Print("SNvInXMASS.ps");
+
+   Printf("number of events in Nakazato model 2001: %f",
+         h0->Integral(3*2+1,50*2)*0.5);
+
+   // brightest Nakazato Model
+   sn->SetModel(model3003);
+   xmass->Clear(); // clear internal functions
+   h0 = xmass->HNevt(0,50*keV);
+   h1 = xmass->HNevt(1,50*keV);
+   h2 = xmass->HNevt(2,50*keV);
+   h3 = xmass->HNevt(3,50*keV);
+
+   h0->GetYaxis()->SetRangeUser(0,10);
+   h0->Draw();
+   h2->Draw("same");
+   h1->Draw("same");
+   h3->Draw("same");
+
+   leg->Draw();
+   can->Print("SNvInXMASS.ps");
+
+   Printf("number of events in Nakazato model 3003: %f",
+         h0->Integral(3*2+1,50*2)*0.5);
+
+   // black hole in Nakazato Model
+   sn->SetModel(blackHole);
+   xmass->Clear(); // clear internal functions
+   h0 = xmass->HNevt(0,50*keV);
+   h1 = xmass->HNevt(1,50*keV);
+   h2 = xmass->HNevt(2,50*keV);
+   h3 = xmass->HNevt(3,50*keV);
+
+   h0->GetYaxis()->SetRangeUser(0,10);
+   h0->Draw();
+   h2->Draw("same");
+   h1->Draw("same");
+   h3->Draw("same");
+
+   leg->Draw();
+   can->Print("SNvInXMASS.ps");
+
+   Printf("number of events in black hole: %f",
+         h0->Integral(3*2+1,50*2)*0.5);
 
    can->Print("SNvInXMASS.ps]");
 }
