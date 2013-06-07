@@ -103,7 +103,7 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
-   Printf("number of events in Divari approximation: %f",
+   Printf("number of events in Divari approximation: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
    // Totani's Livermore model
@@ -123,7 +123,7 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
-   Printf("number of events in Livermore model: %f",
+   Printf("number of events in Livermore model: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
    // weakest Nakazato Model
@@ -143,7 +143,7 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
-   Printf("number of events in Nakazato model 2001: %f",
+   Printf("number of events in Nakazato model 2001: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
    // weakest Nakazato Model
@@ -163,7 +163,7 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
-   Printf("number of events in Nakazato model 2001: %f",
+   Printf("number of events in Nakazato model 2001: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
    // brightest Nakazato Model
@@ -183,7 +183,7 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
-   Printf("number of events in Nakazato model 3003: %f",
+   Printf("number of events in Nakazato model 3003: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
    // black hole in Nakazato Model
@@ -203,7 +203,7 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
-   Printf("number of events in black hole: %f",
+   Printf("number of events in black hole: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
    can->Print("SNvInXMASS.ps]");
