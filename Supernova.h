@@ -3,6 +3,8 @@
 
 #include "Source.h"
 
+class TArrayD;
+
 namespace NEUS { class SupernovaModel; }
 
 class Supernova : public Source
@@ -20,7 +22,9 @@ class Supernova : public Source
 
       Double_t N2(UShort_t type, Double_t time, Double_t energy);
       Double_t Ne(UShort_t type, Double_t energy);
-      Double_t Nt(UShort_t type, Double_t time);
+
+      Int_t NbinsT();
+      const TArrayD* BinEdgesT();
 
       ClassDef(Supernova,1);
 };
