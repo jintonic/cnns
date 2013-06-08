@@ -12,7 +12,7 @@ using namespace MAD;
 using namespace NEUS;
 
 #include <TF1.h>
-#include <TH1.h>
+#include <TH2D.h>
 #include <TCanvas.h>
 #include <TLegend.h>
 
@@ -23,28 +23,22 @@ int main ()
 {
    // the weakest sn in Nakazato model
    NakazatoModel *model2001 = new NakazatoModel(20,0.02,100);
-   model2001->SetDataLocation("../neus");
-   model2001->LoadIntegratedData();
-   model2001->LoadFullData();
+   model2001->LoadData("../neus");
 
    // the brightest sn in Nakazato model
    NakazatoModel *model3003 = new NakazatoModel(30,0.02,300);
-   model3003->SetDataLocation("../neus");
-   model3003->LoadIntegratedData();
-   model3003->LoadFullData();
+   model3003->LoadData("../neus");
 
    // black hole in Nakazato model
    NakazatoModel *blackHole = new NakazatoModel(30,0.004);
-   blackHole->SetDataLocation("../neus");
-   blackHole->LoadIntegratedData();
+   blackHole->LoadData("../neus");
 
    // Totani's Livermore model
    LivermoreModel *totani = new LivermoreModel;
-   totani->SetDataLocation("../total");
+   totani->LoadData("../total");
 
    // Divari's approximation
    LivermoreModel *divari = new LivermoreModel;
-   divari->SetDataLocation("../total");
    divari->UseDivariData();
 
 
@@ -54,8 +48,8 @@ int main ()
    LXe->AddElement(natXe,1);
 
    Supernova *sn = new Supernova();
-   //sn->SetDistance(196.22*pc); // Betelgeuse
-   sn->SetDistance(10*kpc);
+   sn->SetDistance(196.22*pc); // Betelgeuse
+   //sn->SetDistance(10*kpc);
 
    Experiment *xmass = new Experiment(LXe, sn);
    xmass->SetTargetMass(835*kg);
@@ -146,26 +140,6 @@ int main ()
    Printf("number of events in Nakazato model 2001: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
 
-   // weakest Nakazato Model
-   sn->SetModel(model2001);
-   xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevt(0,50*keV);
-   h1 = xmass->HNevt(1,50*keV);
-   h2 = xmass->HNevt(2,50*keV);
-   h3 = xmass->HNevt(3,50*keV);
-
-   h0->GetYaxis()->SetRangeUser(0,10);
-   h0->Draw();
-   h2->Draw("same");
-   h1->Draw("same");
-   h3->Draw("same");
-
-   leg->Draw();
-   can->Print("SNvInXMASS.ps");
-
-   Printf("number of events in Nakazato model 2001: %.1f",
-         h0->Integral(3*2+1,50*2)*0.5);
-
    // brightest Nakazato Model
    sn->SetModel(model3003);
    xmass->Clear(); // clear internal functions
@@ -205,6 +179,24 @@ int main ()
 
    Printf("number of events in black hole: %.1f",
          h0->Integral(3*2+1,50*2)*0.5);
+
+   // time dependent event rate
+   sn->SetModel(totani);
+   xmass->Clear();
+   TH2D *hT = xmass->HN2(0);
+
+   hT->GetXaxis()->SetRangeUser(1.2e-2,17.9012);
+   //hT->GetXaxis()->SetRangeUser(1.2e-2,0.9012);
+   //hT->GetYaxis()->SetRangeUser(0,0.5);
+   can->SetLogx();
+   can->SetLogz();
+   hT->Draw("colz");
+   can->Print("SNvInXMASS.ps");
+
+   //can->SetLogy();
+   xmass->HNt(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
+   xmass->HNt(0)->Draw();
+   can->Print("SNvInXMASS.ps");
 
    can->Print("SNvInXMASS.ps]");
 }
