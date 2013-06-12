@@ -93,8 +93,17 @@ int main ()
    leg->Draw();
    can->Print("SNvInXMASS.ps");
 
+   Int_t startBin=0, endBin=0;
+   for (Int_t i=1; i<=h0->GetNbinsX(); i++) {
+      startBin=i;
+      if (h0->GetBinLowEdge(i)*keV>=3*keV) break;
+   }
+   for (Int_t i=1; i<=h0->GetNbinsX(); i++) {
+      if (h0->GetBinLowEdge(i)*keV>=50*keV) break;
+      endBin=i;
+   }
    Printf("number of events in Divari approximation: %.1f",
-         h0->Integral(3*2+1,50*2)*0.5);
+         h0->Integral(startBin,endBin,"width"));
 
    // Totani's Livermore model
    xmass->SetModel(totani);
@@ -114,7 +123,7 @@ int main ()
    can->Print("SNvInXMASS.ps");
 
    Printf("number of events in Livermore model: %.1f",
-         h0->Integral(3*2+1,50*2)*0.5);
+         h0->Integral(startBin,endBin,"width"));
 
    // weakest Nakazato Model
    xmass->SetModel(model2001);
@@ -134,7 +143,7 @@ int main ()
    can->Print("SNvInXMASS.ps");
 
    Printf("number of events in Nakazato model 2001: %.1f",
-         h0->Integral(3*2+1,50*2)*0.5);
+         h0->Integral(startBin,endBin,"width"));
 
    // brightest Nakazato Model
    xmass->SetModel(model3003);
@@ -154,7 +163,7 @@ int main ()
    can->Print("SNvInXMASS.ps");
 
    Printf("number of events in Nakazato model 3003: %.1f",
-         h0->Integral(3*2+1,50*2)*0.5);
+         h0->Integral(startBin,endBin,"width"));
 
    // black hole in Nakazato Model
    xmass->SetModel(blackHole);
@@ -174,7 +183,7 @@ int main ()
    can->Print("SNvInXMASS.ps");
 
    Printf("number of events in black hole: %.1f",
-         h0->Integral(3*2+1,50*2)*0.5);
+         h0->Integral(startBin,endBin,"width"));
 
    // time dependent event rate
    xmass->SetModel(totani);
