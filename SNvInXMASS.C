@@ -1,15 +1,14 @@
-#include "Experiment.h"
-
-#include "Supernova.h"
+#include "SupernovaExperiment.h"
 
 #include <NEUS/NakazatoModel.h>
 #include <NEUS/LivermoreModel.h>
+using namespace NEUS;
+
 #include <MAD/NaturalXe.h>
 #include <MAD/LiquidXenon.h>
+using namespace MAD;
 
 using namespace UNIC;
-using namespace MAD;
-using namespace NEUS;
 
 #include <TF1.h>
 #include <TH2D.h>
@@ -47,11 +46,8 @@ int main ()
    LiquidXenon *LXe = new LiquidXenon;
    LXe->AddElement(natXe,1);
 
-   Supernova *sn = new Supernova();
-   sn->SetDistance(196.22*pc); // Betelgeuse
-   //sn->SetDistance(10*kpc);
-
-   Experiment *xmass = new Experiment(LXe, sn);
+   SupernovaExperiment *xmass = new SupernovaExperiment(LXe, divari);
+   xmass->SetDistance(196.22*pc); // Betelgeuse
    xmass->SetTargetMass(835*kg);
    xmass->SetThreshold(0.3*keV);
 
@@ -60,7 +56,7 @@ int main ()
    TCanvas *can = new TCanvas;
    can->Print("SNvInXMASS.ps[");
 
-   sn->SetModel(divari);
+   xmass->SetModel(divari);
    TH1D *h0 = xmass->HXSxNe(0);
    TH1D *h1 = xmass->HXSxNe(1);
    TH1D *h2 = xmass->HXSxNe(2);
@@ -88,7 +84,7 @@ int main ()
    h2 = xmass->HNevt(2,50*keV);
    h3 = xmass->HNevt(3,50*keV);
 
-   h0->GetYaxis()->SetRangeUser(0,10);
+   //h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -101,7 +97,7 @@ int main ()
          h0->Integral(3*2+1,50*2)*0.5);
 
    // Totani's Livermore model
-   sn->SetModel(totani);
+   xmass->SetModel(totani);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,50*keV);
    h1 = xmass->HNevt(1,50*keV);
@@ -121,7 +117,7 @@ int main ()
          h0->Integral(3*2+1,50*2)*0.5);
 
    // weakest Nakazato Model
-   sn->SetModel(model2001);
+   xmass->SetModel(model2001);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,50*keV);
    h1 = xmass->HNevt(1,50*keV);
@@ -141,7 +137,7 @@ int main ()
          h0->Integral(3*2+1,50*2)*0.5);
 
    // brightest Nakazato Model
-   sn->SetModel(model3003);
+   xmass->SetModel(model3003);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,50*keV);
    h1 = xmass->HNevt(1,50*keV);
@@ -161,7 +157,7 @@ int main ()
          h0->Integral(3*2+1,50*2)*0.5);
 
    // black hole in Nakazato Model
-   sn->SetModel(blackHole);
+   xmass->SetModel(blackHole);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,50*keV);
    h1 = xmass->HNevt(1,50*keV);
@@ -181,7 +177,7 @@ int main ()
          h0->Integral(3*2+1,50*2)*0.5);
 
    // time dependent event rate
-   sn->SetModel(totani);
+   xmass->SetModel(totani);
    xmass->Clear();
    TH2D *hT = xmass->HN2(0);
 
