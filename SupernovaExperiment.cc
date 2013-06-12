@@ -48,7 +48,6 @@ Double_t SupernovaExperiment::XSxNe(Double_t *x, Double_t *parameter)
    if (type<1 || type>6)
       return dXS*(fModel->Ne(1,Ev/MeV) + fModel->Ne(2,Ev/MeV) + 4*fModel->Ne(3,Ev/MeV))/MeV;
 
-   //Printf("Ne: %e, Ev: %f MeV",fModel->Ne(type,Ev/MeV),Ev/MeV);
    return dXS * fModel->Ne(type,Ev/MeV)/MeV;
 }
 
@@ -65,7 +64,6 @@ Double_t SupernovaExperiment::XSxN2(Double_t *x, Double_t *parameter)
    Element *element = (Element*) fMaterial->GetElement();
    Double_t dXS = element->CNNSdXS(Er, Ev);
 
-   //Printf("t: %f s, Er: %f keV, Ev: %f MeV",time/second,Er/keV,Ev/MeV);
    if (type<1 || type>6)
       return dXS*(fModel->N2(1,time/second,Ev/MeV)/second/MeV
             + fModel->N2(2,time/second,Ev/MeV)/second/MeV 
@@ -99,10 +97,9 @@ Double_t SupernovaExperiment::FuncN(Double_t *x, Double_t *parameter)
    Element *element = (Element*) fMaterial->GetElement();
    Double_t atomicMass  = element->A();
    Double_t nNuclei = fMass/atomicMass*Avogadro;
-   Double_t area = 4*pi*fDistance*fDistance;
+   Double_t area = 4*pi*fDistance/hbarc*fDistance/hbarc;
    Double_t minEv = (Er + Sqrt(2*element->M()*Er))/2;
 
-   //Printf("Er: %f keV, minEv: %f MeV, maxEv: %f MeV ==========", x[0], minEv, maxEv);
    TF1 *f = FXSxNe(type,Er,minEv,maxEv);
    return nNuclei/area*1e50*f->Integral(minEv/MeV, maxEv/MeV)*keV;
 }
