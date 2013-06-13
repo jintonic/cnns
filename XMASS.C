@@ -47,7 +47,8 @@ int main ()
    LXe->AddElement(natXe,1);
 
    SupernovaExperiment *xmass = new SupernovaExperiment(LXe, divari);
-   xmass->SetDistance(196.22*pc); // Betelgeuse
+   xmass->SetDistance(10*kpc);
+   //xmass->SetDistance(196.22*pc); // Betelgeuse
    xmass->SetTargetMass(835*kg);
    xmass->SetThreshold(0.3*keV);
 
