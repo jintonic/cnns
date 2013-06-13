@@ -74,7 +74,7 @@ Double_t SupernovaExperiment::XSxN2(Double_t *x, Double_t *parameter)
 //______________________________________________________________________________
 //
 
-Double_t SupernovaExperiment::FuncN(Double_t *x, Double_t *parameter)
+Double_t SupernovaExperiment::Nevt(Double_t *x, Double_t *parameter)
 {
    if (!fMaterial) {
       Warning("Nevt", "Please set targe material!");
@@ -100,8 +100,8 @@ Double_t SupernovaExperiment::FuncN(Double_t *x, Double_t *parameter)
    Double_t area = 4*pi*fDistance/hbarc*fDistance/hbarc;
    Double_t minEv = (Er + Sqrt(2*element->M()*Er))/2;
    if (minEv<fModel->EMin()*MeV) {
-      Warning("FuncN","Requested neutrino energy is too small.");
-      Warning("FuncN","Reset it to the minimal energy provided by NEUS.");
+      Warning("Nevt","Requested neutrino energy is too small.");
+      Warning("Nevt","Reset it to the minimal energy provided by NEUS.");
       minEv=fModel->EMin()*MeV;
    }
 
@@ -161,7 +161,7 @@ TF1* SupernovaExperiment::FNevt(UShort_t type, Double_t maxEr)
 
    fNevt[type] = new TF1(Form("fNevt_%s_%s_%f_%d",
             fMaterial->GetName(), fModel->GetName(), fMass, type),
-         this, &SupernovaExperiment::FuncN, 0, maxEr,1);
+         this, &SupernovaExperiment::Nevt, 0, maxEr,1);
    fNevt[type]->SetParameter(0,type);
 
    if (type==0) {

@@ -27,7 +27,7 @@ class SupernovaExperiment : public TNamed
 
       Double_t XSxNe(Double_t *x, Double_t *parameter); // function of dXS * Ne
       Double_t XSxN2(Double_t *x, Double_t *parameter); // function of dXS * N2
-      Double_t FuncN(Double_t *x, Double_t *parameter); // function of Nevt
+      Double_t Nevt(Double_t *x, Double_t *parameter); // function of Nevt
 
    public:
       SupernovaExperiment(MAD::Material *material=0, NEUS::SupernovaModel *model=0);
