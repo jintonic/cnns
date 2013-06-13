@@ -81,10 +81,11 @@ int main ()
    can->Print("XMASS.ps");
 
    // Divari approximation
-   h0 = xmass->HNevt(0,50*keV);
-   h1 = xmass->HNevt(1,50*keV);
-   h2 = xmass->HNevt(2,50*keV);
-   h3 = xmass->HNevt(3,50*keV);
+   Double_t maxEr = 50*keV;
+   h0 = xmass->HNevt(0,maxEr);
+   h1 = xmass->HNevt(1,maxEr);
+   h2 = xmass->HNevt(2,maxEr);
+   h3 = xmass->HNevt(3,maxEr);
 
    //h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
@@ -101,7 +102,7 @@ int main ()
       if (h0->GetBinLowEdge(i)*keV>=3*keV) break;
    }
    for (Int_t i=1; i<=h0->GetNbinsX(); i++) {
-      if (h0->GetBinLowEdge(i)*keV>=50*keV) break;
+      if (h0->GetBinLowEdge(i)*keV>=maxEr) break;
       endBin=i;
    }
    Printf("number of events in Divari approximation: %.1f",
@@ -110,10 +111,10 @@ int main ()
    // Totani's Livermore model
    xmass->SetModel(totani);
    xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevt(0,50*keV);
-   h1 = xmass->HNevt(1,50*keV);
-   h2 = xmass->HNevt(2,50*keV);
-   h3 = xmass->HNevt(3,50*keV);
+   h0 = xmass->HNevt(0,maxEr);
+   h1 = xmass->HNevt(1,maxEr);
+   h2 = xmass->HNevt(2,maxEr);
+   h3 = xmass->HNevt(3,maxEr);
 
    h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
@@ -130,10 +131,10 @@ int main ()
    // weakest Nakazato Model
    xmass->SetModel(model2001);
    xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevt(0,50*keV);
-   h1 = xmass->HNevt(1,50*keV);
-   h2 = xmass->HNevt(2,50*keV);
-   h3 = xmass->HNevt(3,50*keV);
+   h0 = xmass->HNevt(0,maxEr);
+   h1 = xmass->HNevt(1,maxEr);
+   h2 = xmass->HNevt(2,maxEr);
+   h3 = xmass->HNevt(3,maxEr);
 
    h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
@@ -150,10 +151,10 @@ int main ()
    // brightest Nakazato Model
    xmass->SetModel(model3003);
    xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevt(0,50*keV);
-   h1 = xmass->HNevt(1,50*keV);
-   h2 = xmass->HNevt(2,50*keV);
-   h3 = xmass->HNevt(3,50*keV);
+   h0 = xmass->HNevt(0,maxEr);
+   h1 = xmass->HNevt(1,maxEr);
+   h2 = xmass->HNevt(2,maxEr);
+   h3 = xmass->HNevt(3,maxEr);
 
    h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
@@ -170,10 +171,10 @@ int main ()
    // black hole in Nakazato Model
    xmass->SetModel(blackHole);
    xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevt(0,50*keV);
-   h1 = xmass->HNevt(1,50*keV);
-   h2 = xmass->HNevt(2,50*keV);
-   h3 = xmass->HNevt(3,50*keV);
+   h0 = xmass->HNevt(0,maxEr);
+   h1 = xmass->HNevt(1,maxEr);
+   h2 = xmass->HNevt(2,maxEr);
+   h3 = xmass->HNevt(3,maxEr);
 
    h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
