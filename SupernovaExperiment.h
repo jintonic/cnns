@@ -37,9 +37,7 @@ class SupernovaExperiment : public TNamed
 
       // in case of reactor, it gives Nevt/keVnr/second
       // in case of supernova, it gives Nevt/keVnr in 20 second
-      Double_t Nevt(UShort_t type,
-            Double_t nEr, 
-            Double_t maxEv=82.5*UNIC::MeV);
+      Double_t Nevt(UShort_t type, Double_t nEr);
 
       void SetTargetMass(Double_t m) { fMass=m; }
       Double_t TargetMass() { return fMass; }
@@ -58,28 +56,23 @@ class SupernovaExperiment : public TNamed
 
       TF1* FXSxNe(UShort_t type=1, 
             Double_t nEr=5*UNIC::keV,
-            Double_t minEv= 2.5*UNIC::MeV,
-            Double_t maxEv=82.5*UNIC::MeV);
+            Double_t minEv= 2.5*UNIC::MeV);
 
       TF1* FNevt(UShort_t type=1,
-            Double_t maxEr=50*UNIC::keV,
-            Double_t maxEv=82.5*UNIC::MeV);
+            Double_t maxEr=50*UNIC::keV);
 
       TH1D* HXSxNe(UShort_t type=1,
             Double_t nEr=5*UNIC::keV,
-            Double_t minEv= 2.5*UNIC::MeV,
-            Double_t maxEv=82.5*UNIC::MeV);
+            Double_t minEv= 2.5*UNIC::MeV);
 
       TH1D* HNevt(UShort_t type=1,
-            Double_t maxEr=50*UNIC::keV,
-            Double_t maxEv=82.5*UNIC::MeV);
+            Double_t maxEr=50*UNIC::keV);
 
       Double_t N2(UShort_t type, Double_t time, Double_t Enr);
       TH2D* HN2(UShort_t type); // Nevt(t, Enr)
       TH1D* HNt(UShort_t type); // Nevt(t)
       TF1* FXSxN2(UShort_t type=1, Double_t time=0, Double_t Enr=5*UNIC::keV,
-            Double_t minEv= 2.5*UNIC::MeV, Double_t maxEv=82.5*UNIC::MeV);
-
+            Double_t minEv= 2.5*UNIC::MeV);
 
       /**
        * Delete internal objects.
