@@ -55,15 +55,13 @@ class SupernovaExperiment : public TNamed
       Double_t Distance() { return fDistance; }
 
       TF1* FXSxNe(UShort_t type=1, 
-            Double_t nEr=5*UNIC::keV,
-            Double_t minEv= 2.5*UNIC::MeV);
+            Double_t nEr=5*UNIC::keV);
 
       TF1* FNevt(UShort_t type=1,
             Double_t maxEr=50*UNIC::keV);
 
       TH1D* HXSxNe(UShort_t type=1,
-            Double_t nEr=5*UNIC::keV,
-            Double_t minEv= 2.5*UNIC::MeV);
+            Double_t nEr=5*UNIC::keV);
 
       TH1D* HNevt(UShort_t type=1,
             Double_t maxEr=50*UNIC::keV);
@@ -71,8 +69,7 @@ class SupernovaExperiment : public TNamed
       Double_t N2(UShort_t type, Double_t time, Double_t Enr);
       TH2D* HN2(UShort_t type); // Nevt(t, Enr)
       TH1D* HNt(UShort_t type); // Nevt(t)
-      TF1* FXSxN2(UShort_t type=1, Double_t time=0, Double_t Enr=5*UNIC::keV,
-            Double_t minEv= 2.5*UNIC::MeV);
+      TF1* FXSxN2(UShort_t type=1, Double_t time=0, Double_t Enr=5*UNIC::keV);
 
       /**
        * Delete internal objects.
