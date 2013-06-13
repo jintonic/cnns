@@ -58,10 +58,10 @@ int main ()
    can->Print("XMASS.ps[");
 
    xmass->SetModel(divari);
-   TH1D *h0 = xmass->HXSxNe(0);
-   TH1D *h1 = xmass->HXSxNe(1);
-   TH1D *h2 = xmass->HXSxNe(2);
-   TH1D *h3 = xmass->HXSxNe(3);
+   TH1D *h0 = xmass->HXSxNe(0,5*keV);
+   TH1D *h1 = xmass->HXSxNe(1,5*keV);
+   TH1D *h2 = xmass->HXSxNe(2,5*keV);
+   TH1D *h3 = xmass->HXSxNe(3,5*keV);
 
    h0->Draw();
    h1->Draw("same");
