@@ -147,16 +147,6 @@ Double_t SupernovaExperiment::N2(UShort_t type, Double_t time, Double_t Enr)
 //______________________________________________________________________________
 //
 
-Double_t SupernovaExperiment::Nevt(UShort_t type, Double_t nEr)
-{
-   Double_t x[1] = {nEr/keV};
-   Double_t p[1] = {type};
-   return FuncN(x,p);
-}
-
-//______________________________________________________________________________
-//
-
 TF1* SupernovaExperiment::FNevt(UShort_t type, Double_t maxEr)
 {
    if (fNevt[type]) {

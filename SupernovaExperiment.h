@@ -33,10 +33,6 @@ class SupernovaExperiment : public TNamed
       SupernovaExperiment(MAD::Material *material=0, NEUS::SupernovaModel *model=0);
       virtual ~SupernovaExperiment() { Clear(); } 
 
-      // in case of reactor, it gives Nevt/keVnr/second
-      // in case of supernova, it gives Nevt/keVnr in 20 second
-      Double_t Nevt(UShort_t type, Double_t nEr);
-
       void SetTargetMass(Double_t m) { fMass=m; }
       Double_t TargetMass() { return fMass; }
 
