@@ -47,16 +47,17 @@ int main ()
 
    // set up experiment
    SupernovaExperiment *xmass = new SupernovaExperiment(LXe);
-   xmass->SetDistance(10*kpc);
-   //xmass->SetDistance(196.22*pc); // Betelgeuse
+   xmass->SetDistance(196.22*pc); // Betelgeuse
+   xmass->SetDistance(10*kpc); // galaxy center
    xmass->SetTargetMass(835*kg);
-   xmass->SetThreshold(0.3*keV);
+   xmass->SetThreshold(0.3*keV); // not used at this moment
 
 
    // draw results
    TCanvas *can = new TCanvas;
    can->Print("XMASS.ps[");
 
+   // dXS()
    xmass->SetSupernovaModel(divari);
    TH1D *h0 = xmass->HXSxNe(0,5*keV);
    TH1D *h1 = xmass->HXSxNe(1,5*keV);
