@@ -46,7 +46,7 @@ class SupernovaExperiment : public TNamed
       void SetTargetMaterial(MAD::Material *material) { fMaterial=material; }
       MAD::Material* TargetMaterial() { return fMaterial; }
 
-      void SetModel(NEUS::SupernovaModel *model) { fModel = model; }
+      void SetSupernovaModel(NEUS::SupernovaModel *model) { fModel = model; }
       NEUS::SupernovaModel* Model() { return fModel; }
 
       void SetDistance(Double_t distance) { fDistance=distance; }

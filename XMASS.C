@@ -16,9 +16,6 @@ using namespace UNIC;
 #include <TCanvas.h>
 #include <TLegend.h>
 
-#include <iostream>
-using namespace std;
-
 int main ()
 {
    // the weakest sn in Nakazato model
@@ -42,12 +39,14 @@ int main ()
    divari->UseDivariData();
 
 
-   // set up experiment
+   // target material
    NaturalXe *natXe = new NaturalXe;
    LiquidXenon *LXe = new LiquidXenon;
    LXe->AddElement(natXe,1);
 
-   SupernovaExperiment *xmass = new SupernovaExperiment(LXe, divari);
+
+   // set up experiment
+   SupernovaExperiment *xmass = new SupernovaExperiment(LXe);
    xmass->SetDistance(10*kpc);
    //xmass->SetDistance(196.22*pc); // Betelgeuse
    xmass->SetTargetMass(835*kg);
@@ -58,7 +57,7 @@ int main ()
    TCanvas *can = new TCanvas;
    can->Print("XMASS.ps[");
 
-   xmass->SetModel(divari);
+   xmass->SetSupernovaModel(divari);
    TH1D *h0 = xmass->HXSxNe(0,5*keV);
    TH1D *h1 = xmass->HXSxNe(1,5*keV);
    TH1D *h2 = xmass->HXSxNe(2,5*keV);
@@ -109,7 +108,7 @@ int main ()
          h0->Integral(startBin,endBin,"width"));
 
    // Totani's Livermore model
-   xmass->SetModel(totani);
+   xmass->SetSupernovaModel(totani);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,maxEr);
    h1 = xmass->HNevt(1,maxEr);
@@ -129,7 +128,7 @@ int main ()
          h0->Integral(startBin,endBin,"width"));
 
    // weakest Nakazato Model
-   xmass->SetModel(model2001);
+   xmass->SetSupernovaModel(model2001);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,maxEr);
    h1 = xmass->HNevt(1,maxEr);
@@ -149,7 +148,7 @@ int main ()
          h0->Integral(startBin,endBin,"width"));
 
    // brightest Nakazato Model
-   xmass->SetModel(model3003);
+   xmass->SetSupernovaModel(model3003);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,maxEr);
    h1 = xmass->HNevt(1,maxEr);
@@ -169,7 +168,7 @@ int main ()
          h0->Integral(startBin,endBin,"width"));
 
    // black hole in Nakazato Model
-   xmass->SetModel(blackHole);
+   xmass->SetSupernovaModel(blackHole);
    xmass->Clear(); // clear internal functions
    h0 = xmass->HNevt(0,maxEr);
    h1 = xmass->HNevt(1,maxEr);
@@ -189,7 +188,7 @@ int main ()
          h0->Integral(startBin,endBin,"width"));
 
    // time dependent event rate
-   xmass->SetModel(totani);
+   xmass->SetSupernovaModel(totani);
    xmass->Clear();
    TH2D *hT = xmass->HN2(0);
 
