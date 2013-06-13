@@ -91,8 +91,8 @@ Double_t SupernovaExperiment::FuncN(Double_t *x, Double_t *parameter)
    }
 
    Double_t Er = x[0]*keV; // nuclear recoil energy
-   Double_t maxEv = parameter[0]*MeV; // max neutrino energy
-   UShort_t type = static_cast<UShort_t>(parameter[1]); // type of neutrino
+   UShort_t type = static_cast<UShort_t>(parameter[0]); // type of neutrino
+   Double_t maxEv = fModel->EMax()*MeV; // max neutrino energy
 
    Element *element = (Element*) fMaterial->GetElement();
    Double_t atomicMass  = element->A();
@@ -100,7 +100,7 @@ Double_t SupernovaExperiment::FuncN(Double_t *x, Double_t *parameter)
    Double_t area = 4*pi*fDistance/hbarc*fDistance/hbarc;
    Double_t minEv = (Er + Sqrt(2*element->M()*Er))/2;
 
-   TF1 *f = FXSxNe(type,Er,minEv,maxEv);
+   TF1 *f = FXSxNe(type,Er,minEv);
    return nNuclei/area*1e50*f->Integral(minEv/MeV, maxEv/MeV)*keV;
 }
 
@@ -128,27 +128,26 @@ Double_t SupernovaExperiment::N2(UShort_t type, Double_t time, Double_t Enr)
    Double_t area = 4*pi*fDistance*fDistance;
 
    Double_t minEv = (Enr + Sqrt(2*element->M()*Enr))/2;
-   Double_t maxEv = 82.5*MeV; // max neutrino energy
+   Double_t maxEv = fModel->EMax()*MeV; // max neutrino energy
 
-   TF1 *f = FXSxN2(type,time,Enr,minEv,maxEv);
+   TF1 *f = FXSxN2(type,time,Enr,minEv);
    return nNuclei/area*1e50*f->Integral(minEv/MeV, maxEv/MeV)*keV*second;
 }
 
 //______________________________________________________________________________
 //
 
-Double_t SupernovaExperiment::Nevt(UShort_t type,
-      Double_t nEr, Double_t maxEv)
+Double_t SupernovaExperiment::Nevt(UShort_t type, Double_t nEr)
 {
    Double_t x[1] = {nEr/keV};
-   Double_t p[2] = {maxEv/MeV, type};
+   Double_t p[1] = {type};
    return FuncN(x,p);
 }
 
 //______________________________________________________________________________
 //
 
-TF1* SupernovaExperiment::FNevt(UShort_t type, Double_t maxEr, Double_t maxEv)
+TF1* SupernovaExperiment::FNevt(UShort_t type, Double_t maxEr)
 {
    if (fNevt[type]) {
       Double_t min, max;
@@ -157,18 +156,13 @@ TF1* SupernovaExperiment::FNevt(UShort_t type, Double_t maxEr, Double_t maxEv)
          Info("FNevt","Reset range of recoil energy.");
          fNevt[type]->SetRange(0,maxEr/keV);
       }
-      if (fNevt[type]->GetParameter(0)!=maxEv/MeV) {
-         Info("FNevt","Reset maximal neutrino energy.");
-         fNevt[type]->SetParameter(0,maxEv/MeV);
-      }
       return fNevt[type];
    }
 
    fNevt[type] = new TF1(Form("fNevt_%s_%s_%f_%d",
             fMaterial->GetName(), fModel->GetName(), fMass, type),
-         this, &SupernovaExperiment::FuncN, 0, maxEr/keV,2);
-   fNevt[type]->SetParameter(0,maxEv/MeV);
-   fNevt[type]->SetParameter(1,type);
+         this, &SupernovaExperiment::FuncN, 0, maxEr/keV,1);
+   fNevt[type]->SetParameter(0,type);
 
    if (type==0) {
       fNevt[type]->SetTitle(Form(
@@ -188,9 +182,9 @@ TF1* SupernovaExperiment::FNevt(UShort_t type, Double_t maxEr, Double_t maxEv)
 //______________________________________________________________________________
 //
 
-TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr,
-      Double_t minEv, Double_t maxEv)
+TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr, Double_t minEv)
 {
+   Double_t maxEv = fModel->EMax();
    if (fXSxNe[type]) {
       fXSxNe[type]->SetRange(minEv/MeV,maxEv/MeV);
       fXSxNe[type]->SetParameter(0,nEr/keV);
@@ -223,8 +217,9 @@ TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr,
 //
 
 TF1* SupernovaExperiment::FXSxN2(UShort_t type, Double_t time, 
-      Double_t Enr, Double_t minEv, Double_t maxEv)
+      Double_t Enr, Double_t minEv)
 {
+   Double_t maxEv = fModel->EMax();
    if (fXSxN2[type]) {
       fXSxN2[type]->SetRange(minEv/MeV,maxEv/MeV);
       fXSxN2[type]->SetParameter(0,Enr/keV);
@@ -258,19 +253,18 @@ TF1* SupernovaExperiment::FXSxN2(UShort_t type, Double_t time,
 //______________________________________________________________________________
 //
 
-TH1D* SupernovaExperiment::HNevt(UShort_t type, Double_t maxEr, Double_t maxEv)
+TH1D* SupernovaExperiment::HNevt(UShort_t type, Double_t maxEr)
 {
-   TH1D *h = (TH1D*) FNevt(type,maxEr,maxEv)->GetHistogram();
+   TH1D *h = (TH1D*) FNevt(type,maxEr)->GetHistogram();
    return h;
 }
 
 //______________________________________________________________________________
 //
 
-TH1D* SupernovaExperiment::HXSxNe(UShort_t type, Double_t nEr,
-      Double_t minEv, Double_t maxEv)
+TH1D* SupernovaExperiment::HXSxNe(UShort_t type, Double_t nEr, Double_t minEv)
 {
-   TH1D *h = (TH1D*) FXSxNe(type, nEr, minEv, maxEv)->GetHistogram();
+   TH1D *h = (TH1D*) FXSxNe(type, nEr, minEv)->GetHistogram();
    return h;
 }
 
