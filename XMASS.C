@@ -8,6 +8,7 @@ using namespace NEUS;
 #include <MAD/LiquidXenon.h>
 using namespace MAD;
 
+#include <UNIC/Units.h>
 using namespace UNIC;
 
 #include <TF1.h>
