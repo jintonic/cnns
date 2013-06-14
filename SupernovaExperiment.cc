@@ -213,8 +213,7 @@ TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr)
 //______________________________________________________________________________
 //
 
-TF1* SupernovaExperiment::FXSxN2(UShort_t type, Double_t time, 
-      Double_t Enr)
+TF1* SupernovaExperiment::FXSxN2(UShort_t type, Double_t time, Double_t Enr)
 {
    if (fXSxN2[type]) {
       fXSxN2[type]->SetParameter(0,Enr);
