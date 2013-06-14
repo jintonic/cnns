@@ -173,22 +173,34 @@ int main ()
    can->Print("XMASS.ps");
 
    Printf("number of events in black hole: %.1f", xmass->Nevt(maxEr)); 
+
+
    // time dependent event rate
    xmass->SetSupernovaModel(totani);
+   xmass->SetThreshold(0.*keV);
    xmass->Clear();
-   TH2D *hT = xmass->HNevt2(0);
+   TH2D *hN = xmass->HNevt2(0);
 
-   hT->GetXaxis()->SetRangeUser(1.2e-2,17.9012);
-   //hT->GetXaxis()->SetRangeUser(1.2e-2,0.9012);
-   //hT->GetYaxis()->SetRangeUser(0,0.5);
+   hN->GetXaxis()->SetRangeUser(1.2e-2,17.9012);
+   hN->GetZaxis()->SetRangeUser(1e-12,10);
    can->SetLogx();
    can->SetLogz();
-   hT->Draw("colz");
+   hN->Draw("colz");
    can->Print("XMASS.ps");
 
-   //can->SetLogy();
    xmass->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
-   xmass->HNevtT(0)->Draw();
+   TH1 *hc = xmass->HNevtT(0)->DrawCopy();
+
+   xmass->SetThreshold(0.3*keV);
+   TH1D *hT = xmass->HNevtT(0);
+   hT->SetLineColor(kBlue);
+   hT->Draw("same");
+
+   leg->Clear();
+   leg->SetHeader("Detector threshold:");
+   leg->AddEntry(hc,"0 keV","l");
+   leg->AddEntry(hT,"0.3 keV","l");
+   leg->Draw();
    can->Print("XMASS.ps");
 
    can->Print("XMASS.ps]");

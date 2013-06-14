@@ -255,6 +255,7 @@ TH1D* SupernovaExperiment::HNevtE(UShort_t type, Double_t maxEr)
       Warning("HNevtE","Return NULL pointer!");
       return 0;
    }
+   FNevtE(type,maxEr/keV)->SetNpx(200);
    TH1D *h = (TH1D*) FNevtE(type,maxEr/keV)->GetHistogram();
    return h;
 }
@@ -331,16 +332,39 @@ TH2D* SupernovaExperiment::HNevt2(UShort_t type)
       Warning("HNevt2","Return NULL pointer!");
       return 0;
    }
-   if (fHNevt2[type]) return fHNevt2[type];
 
+   TString name = Form("hNevt2-%d-%f", type, fThreshold);
+   if (fHNevt2[type]) {
+      if (name.CompareTo(fHNevt2[type]->GetName())==0) return fHNevt2[type];
+      else delete fHNevt2[type];
+   }
+
+   // define bins
    Int_t nbinst=fModel->HN2()->GetXaxis()->GetNbins();
    const Double_t *tbins = fModel->HN2()->GetXaxis()->GetXbins()->GetArray();
-   fHNevt2[type] = new TH2D(Form("hNevt2%d",type),"",nbinst,tbins,100,0,50);
+   Int_t nbinse=0;
+   Double_t e=0, de, ebins[200];
+   while (e<50.) {
+      if (e<4.9999) de=0.1;
+      else if (e<20.) de=1;
+      else de=2;
+      ebins[nbinse]=e;
+      nbinse++;
+      e+=de;
+   }
+   ebins[nbinse]=e;
 
+   // create histogram
+   Double_t minEr = fMaterial->Enr(Threshold());
+   Info("HNevt2","Create HNevt2 with threshold %.3f keVnr",minEr/keV);
+   fHNevt2[type] = new TH2D(name.Data(),"",nbinst,tbins,nbinse,ebins);
+
+   // fill histogram
    for (Int_t ix=1; ix<=fHNevt2[type]->GetNbinsX(); ix++) {
       for (Int_t iy=1; iy<=fHNevt2[type]->GetNbinsY(); iy++) {
          Double_t t = fHNevt2[type]->GetXaxis()->GetBinCenter(ix);
          Double_t e = fHNevt2[type]->GetYaxis()->GetBinCenter(iy);
+         if (e*keV<minEr) continue; // skip events below threshold
          Double_t nevt = Nevt2(type,t*second,e*keV);
          fHNevt2[type]->SetBinContent(ix, iy, nevt);
       }
@@ -358,30 +382,32 @@ TH2D* SupernovaExperiment::HNevt2(UShort_t type)
 
 TH1D* SupernovaExperiment::HNevtT(UShort_t type)
 {
-   if (type>6) {
-      Warning("HNevtT","Type of neutrinos must be in 0, 1, 2, 3, 4, 5, 6!");
-      Warning("HNevtT","Return NULL pointer!");
-      return 0;
+   TH2D *h = HNevt2(type);
+
+   TString name = Form("hNevtT-%d-%f", type, fThreshold);
+   if (fHNevtT[type]) {
+      if (name.CompareTo(fHNevtT[type]->GetName())==0) return fHNevtT[type];
+      else delete fHNevtT[type];
    }
-   if (fHNevtT[type]) return fHNevtT[type];
 
-   Int_t nbinst=fModel->HN2()->GetXaxis()->GetNbins();
-   const Double_t *tbins = fModel->HN2()->GetXaxis()->GetXbins()->GetArray();
-   fHNevtT[type] = new TH1D(Form("HNevtT%d",type),"",nbinst,tbins);
+   // create histogram
+   Int_t nbinst=h->GetXaxis()->GetNbins();
+   const Double_t *tbins = h->GetXaxis()->GetXbins()->GetArray();
+   fHNevtT[type] = new TH1D(name.Data(),"",nbinst,tbins);
 
+   // fill histogram
    for (Int_t ix=1; ix<=fHNevtT[type]->GetNbinsX(); ix++) {
       Double_t nevt=0;
-      for (Int_t iy=1; iy<=HNevt2(type)->GetNbinsY(); iy++) {
-         Double_t dn = HNevt2(type)->GetBinContent(ix,iy);
-         Double_t er = HNevt2(type)->GetYaxis()->GetBinWidth(iy);
+      for (Int_t iy=1; iy<=h->GetNbinsY(); iy++) {
+         Double_t dn = h->GetBinContent(ix,iy);
+         Double_t er = h->GetYaxis()->GetBinWidth(iy);
          nevt+=dn*er;
       }
       fHNevtT[type]->SetBinContent(ix, nevt);
    }
    fHNevtT[type]->SetStats(0);
-   fHNevtT[type]->GetXaxis()->SetTitle("time [second]");
-   fHNevtT[type]->GetYaxis()->SetTitle(Form(
-            "rate of events [Hz/(%.0f kg)]",fMass/kg));
+   fHNevtT[type]->SetXTitle("time [second]");
+   fHNevtT[type]->SetYTitle(Form("rate of events [Hz/(%.0f kg)]",fMass/kg));
 
    return fHNevtT[type];
 }
