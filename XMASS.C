@@ -50,7 +50,7 @@ int main ()
    xmass->SetDistance(196.22*pc); // Betelgeuse
    xmass->SetDistance(10*kpc); // galaxy center
    xmass->SetTargetMass(835*kg);
-   xmass->SetThreshold(0.3*keV); // not used at this moment
+   xmass->SetThreshold(0.3*keV);
 
 
    // draw results
@@ -87,7 +87,7 @@ int main ()
    h2 = xmass->HNevt(2,maxEr);
    h3 = xmass->HNevt(3,maxEr);
 
-   //h0->GetYaxis()->SetRangeUser(0,10);
+   h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -96,17 +96,8 @@ int main ()
    leg->Draw();
    can->Print("XMASS.ps");
 
-   Int_t startBin=0, endBin=0;
-   for (Int_t i=1; i<=h0->GetNbinsX(); i++) {
-      startBin=i;
-      if (h0->GetBinLowEdge(i)*keV>=3*keV) break;
-   }
-   for (Int_t i=1; i<=h0->GetNbinsX(); i++) {
-      if (h0->GetBinLowEdge(i)*keV>=maxEr) break;
-      endBin=i;
-   }
    Printf("number of events in Divari approximation: %.1f",
-         h0->Integral(startBin,endBin,"width"));
+         xmass->TotalNevt(maxEr));
 
    // Totani's Livermore model
    xmass->SetSupernovaModel(totani);
@@ -126,7 +117,7 @@ int main ()
    can->Print("XMASS.ps");
 
    Printf("number of events in Livermore model: %.1f",
-         h0->Integral(startBin,endBin,"width"));
+         xmass->TotalNevt(maxEr));
 
    // weakest Nakazato Model
    xmass->SetSupernovaModel(model2001);
@@ -146,7 +137,7 @@ int main ()
    can->Print("XMASS.ps");
 
    Printf("number of events in Nakazato model 2001: %.1f",
-         h0->Integral(startBin,endBin,"width"));
+         xmass->TotalNevt(maxEr));
 
    // brightest Nakazato Model
    xmass->SetSupernovaModel(model3003);
@@ -166,7 +157,7 @@ int main ()
    can->Print("XMASS.ps");
 
    Printf("number of events in Nakazato model 3003: %.1f",
-         h0->Integral(startBin,endBin,"width"));
+         xmass->TotalNevt(maxEr));
 
    // black hole in Nakazato Model
    xmass->SetSupernovaModel(blackHole);
@@ -186,7 +177,7 @@ int main ()
    can->Print("XMASS.ps");
 
    Printf("number of events in black hole: %.1f",
-         h0->Integral(startBin,endBin,"width"));
+         xmass->TotalNevt(maxEr));
 
    // time dependent event rate
    xmass->SetSupernovaModel(totani);

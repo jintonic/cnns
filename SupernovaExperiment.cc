@@ -42,7 +42,7 @@ Double_t SupernovaExperiment::XSxNe(Double_t *x, Double_t *parameter)
    Double_t Er = parameter[0]; // nuclear recoil energy
    UShort_t type = static_cast<UShort_t>(parameter[1]); // type of neutrino
 
-   Element *element = (Element*) fMaterial->GetElement();
+   Element *element = fMaterial->GetElement();
    Double_t dXS = element->CNNSdXS(Er*keV, Ev*MeV);
 
    if (type==0)
@@ -61,7 +61,7 @@ Double_t SupernovaExperiment::XSxN2(Double_t *x, Double_t *parameter)
    UShort_t type = static_cast<UShort_t>(parameter[1]); // type of neutrino
    Double_t time = parameter[2];
 
-   Element *element = (Element*) fMaterial->GetElement();
+   Element *element = fMaterial->GetElement();
    Double_t dXS = element->CNNSdXS(Er*keV, Ev*MeV);
 
    if (type==0)
@@ -94,7 +94,7 @@ Double_t SupernovaExperiment::Nevt(Double_t *x, Double_t *parameter)
 
    Double_t maxEv = fModel->EMax()*MeV; // max neutrino energy
 
-   Element *element = (Element*) fMaterial->GetElement();
+   Element *element = fMaterial->GetElement();
    Double_t atomicMass  = element->A();
    Double_t nNuclei = fMass/atomicMass*Avogadro;
    Double_t area = 4*pi*fDistance/hbarc*fDistance/hbarc;
@@ -127,7 +127,7 @@ Double_t SupernovaExperiment::N2(UShort_t type, Double_t time, Double_t Enr)
       return 0;
    }
 
-   Element *element = (Element*) fMaterial->GetElement();
+   Element *element = fMaterial->GetElement();
    Double_t atomicMass  = element->A();
    Double_t nNuclei = fMass/atomicMass*Avogadro;
    Double_t area = 4*pi*fDistance/hbarc*fDistance/hbarc;
@@ -257,6 +257,25 @@ TH1D* SupernovaExperiment::HNevt(UShort_t type, Double_t maxEr)
    }
    TH1D *h = (TH1D*) FNevt(type,maxEr/keV)->GetHistogram();
    return h;
+}
+
+//______________________________________________________________________________
+//
+
+Double_t SupernovaExperiment::TotalNevt(Double_t maxEr)
+{
+   TH1D* h = HNevt(0,maxEr);
+   Double_t minEr = fMaterial->Enr(Threshold());
+   Int_t startBin=0, endBin=0;
+   for (Int_t i=1; i<=h->GetNbinsX(); i++) {
+      startBin=i;
+      if (h->GetBinLowEdge(i)*keV>=minEr) break;
+   }
+   for (Int_t i=1; i<=h->GetNbinsX(); i++) {
+      if (h->GetBinLowEdge(i)*keV>=maxEr) break;
+      endBin=i;
+   }
+   return h->Integral(startBin,endBin,"width");
 }
 
 //______________________________________________________________________________

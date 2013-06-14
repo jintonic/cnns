@@ -56,6 +56,8 @@ class SupernovaExperiment : public TNamed
 
       TH1D* HNevt(UShort_t type, Double_t maxEr);
 
+      Double_t TotalNevt(Double_t maxEr);
+
       Double_t N2(UShort_t type, Double_t time, Double_t Enr);
       TH2D* HN2(UShort_t type); // Nevt(t, Enr)
       TH1D* HNt(UShort_t type); // Nevt(t)
