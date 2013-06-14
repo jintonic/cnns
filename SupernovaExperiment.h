@@ -21,13 +21,13 @@ class SupernovaExperiment : public TNamed
 
       TF1 *fXSxNe[7]; // dXS(Ev) * Ne(Ev)
       TF1 *fXSxN2[7]; // dXS(Ev) * N2(time,Ev)
-      TF1 *fNevt[7]; // Nevt in TF1 format
-      TH2D *fHN2[7]; // Nevt(t, Enr)
-      TH1D *fHNt[7]; // Nevt(t)
+      TF1 *fFNevtE[7]; // Nevt(Enr) in TF1 format
+      TH2D *fHNevt2[7]; // Nevt(t, Enr)
+      TH1D *fHNevtT[7]; // Nevt(t)
 
       Double_t XSxNe(Double_t *x, Double_t *parameter); // function of dXS * Ne
       Double_t XSxN2(Double_t *x, Double_t *parameter); // function of dXS * N2
-      Double_t Nevt(Double_t *x, Double_t *parameter); // function of Nevt
+      Double_t NevtE(Double_t *x, Double_t *parameter); // function of NevtE
 
    public:
       SupernovaExperiment(MAD::Material *material=0, NEUS::SupernovaModel *model=0);
@@ -50,18 +50,18 @@ class SupernovaExperiment : public TNamed
 
       TF1* FXSxNe(UShort_t type, Double_t nEr);
 
-      TF1* FNevt(UShort_t type, Double_t maxEr);
+      TF1* FNevtE(UShort_t type, Double_t maxEr);
 
       TH1D* HXSxNe(UShort_t type, Double_t nEr);
 
-      TH1D* HNevt(UShort_t type, Double_t maxEr);
+      TH1D* HNevtE(UShort_t type, Double_t maxEr);
 
-      Double_t TotalNevt(Double_t maxEr);
+      Double_t Nevt(Double_t maxEr); // total number of events
 
-      Double_t N2(UShort_t type, Double_t time, Double_t Enr);
-      TH2D* HN2(UShort_t type); // Nevt(t, Enr)
-      TH1D* HNt(UShort_t type); // Nevt(t)
       TF1* FXSxN2(UShort_t type, Double_t time, Double_t Enr);
+      Double_t Nevt2(UShort_t type, Double_t time, Double_t Enr);
+      TH2D* HNevt2(UShort_t type); // Nevt(t, Enr)
+      TH1D* HNevtT(UShort_t type); // Nevt(t)
 
       /**
        * Delete internal objects.
