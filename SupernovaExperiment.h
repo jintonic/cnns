@@ -19,8 +19,8 @@ class SupernovaExperiment : public TNamed
       Double_t fDistance; // distance between detector and Supernova
       Double_t fThreshold; // energy threshold of detector
 
-      TF1 *fXSxNe[7]; // dXS(Ev) * Ne(Ev)
-      TF1 *fXSxN2[7]; // dXS(Ev) * N2(time,Ev)
+      TF1 *fFXSxNe[7]; // dXS(Ev) * Ne(Ev)
+      TF1 *fFXSxN2[7]; // dXS(Ev) * N2(time,Ev)
       TF1 *fFNevtE[7]; // Nevt(Enr) in TF1 format
       TH2D *fHNevt2[7]; // Nevt(t, Enr)
       TH1D *fHNevtT[7]; // Nevt(t)

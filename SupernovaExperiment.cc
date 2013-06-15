@@ -25,8 +25,8 @@ SupernovaExperiment::SupernovaExperiment(
    fMaterial(material), fModel(model), fMass(0), fDistance(0), fThreshold(0)
 {
    for (UShort_t i=0; i<7; i++) {
-      fXSxNe[i]=0;
-      fXSxN2[i]=0;
+      fFXSxNe[i]=0;
+      fFXSxN2[i]=0;
       fFNevtE[i]=0;
       fHNevt2[i]=0;
       fHNevtT[i]=0;
@@ -184,30 +184,30 @@ TF1* SupernovaExperiment::FNevtE(UShort_t type, Double_t maxEr)
 
 TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr)
 {
-   if (fXSxNe[type]) {
-      fXSxNe[type]->SetParameter(0,nEr);
-      return fXSxNe[type];
+   if (fFXSxNe[type]) {
+      fFXSxNe[type]->SetParameter(0,nEr);
+      return fFXSxNe[type];
    }
 
-   fXSxNe[type] = new TF1(Form("fXSxNe%s%s%f%d",
+   fFXSxNe[type] = new TF1(Form("fFXSxNe%s%s%f%d",
             fModel->GetName(), fMaterial->GetName(), fMass, type), this, 
          &SupernovaExperiment::XSxNe, 0., fModel->EMax(),2);
-   fXSxNe[type]->SetParameter(0,nEr);
-   fXSxNe[type]->SetParameter(1,type);
+   fFXSxNe[type]->SetParameter(0,nEr);
+   fFXSxNe[type]->SetParameter(1,type);
 
    if (type==0) {
-      fXSxNe[type]->SetTitle(Form(
+      fFXSxNe[type]->SetTitle(Form(
                "%s, target: %s, recoil energy: %.1f keV;neutrino energy [MeV];1/MeV^{4}", 
                fModel->GetName(), fMaterial->GetTitle(), nEr));
-      fXSxNe[type]->SetLineColor(kGray+2);
-      fXSxNe[type]->SetLineWidth(2);
+      fFXSxNe[type]->SetLineColor(kGray+2);
+      fFXSxNe[type]->SetLineWidth(2);
    } else {
-      fXSxNe[type]->SetTitle(Form(
+      fFXSxNe[type]->SetTitle(Form(
                "neutrino %d from %s, target: %s;neutrino energy [MeV];1/MeV^{4}", 
                type, fModel->GetName(), fMaterial->GetTitle()));
-      fXSxNe[type]->SetLineColor(type);
+      fFXSxNe[type]->SetLineColor(type);
    }
-   return fXSxNe[type];
+   return fFXSxNe[type];
 }
 
 //______________________________________________________________________________
@@ -215,33 +215,33 @@ TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr)
 
 TF1* SupernovaExperiment::FXSxN2(UShort_t type, Double_t time, Double_t Enr)
 {
-   if (fXSxN2[type]) {
-      fXSxN2[type]->SetParameter(0,Enr);
-      fXSxN2[type]->SetParameter(2,time);
-      return fXSxN2[type];
+   if (fFXSxN2[type]) {
+      fFXSxN2[type]->SetParameter(0,Enr);
+      fFXSxN2[type]->SetParameter(2,time);
+      return fFXSxN2[type];
    }
 
-   fXSxN2[type] = new TF1(Form("fXSxN2%s%s%f%d",
+   fFXSxN2[type] = new TF1(Form("fFXSxN2%s%s%f%d",
             fModel->GetName(), fMaterial->GetName(), fMass, type), this, 
          &SupernovaExperiment::XSxN2, 0., fModel->EMax(),3);
-   fXSxN2[type]->SetParameter(0,Enr);
-   fXSxN2[type]->SetParameter(1,type);
-   fXSxN2[type]->SetParameter(2,time);
+   fFXSxN2[type]->SetParameter(0,Enr);
+   fFXSxN2[type]->SetParameter(1,type);
+   fFXSxN2[type]->SetParameter(2,time);
 
    if (type==0) {
-      fXSxN2[type]->SetTitle(Form(
+      fFXSxN2[type]->SetTitle(Form(
                "%s, target: %s, recoil energy: %.1f keV, time: %.1f second;neutrino energy [MeV];1/MeV^{4}", 
                fModel->GetName(), fMaterial->GetTitle(), Enr, time));
-      fXSxN2[type]->SetLineColor(kGray+2);
-      fXSxN2[type]->SetLineWidth(2);
+      fFXSxN2[type]->SetLineColor(kGray+2);
+      fFXSxN2[type]->SetLineWidth(2);
    } else {
-      fXSxN2[type]->SetTitle(Form(
+      fFXSxN2[type]->SetTitle(Form(
                "neutrino %d from %s, target: %s, recoil energy : %.1f, time: %.1f second;neutrino energy [MeV];1/MeV^{4}", 
                type, fModel->GetName(), fMaterial->GetTitle(),
                Enr, time));
-      fXSxN2[type]->SetLineColor(type);
+      fFXSxN2[type]->SetLineColor(type);
    }
-   return fXSxN2[type];
+   return fFXSxN2[type];
 }
 
 //______________________________________________________________________________
@@ -302,13 +302,13 @@ void SupernovaExperiment::Clear(Option_t *option)
          delete fFNevtE[i];
          fFNevtE[i]=NULL;
       }
-      if (fXSxNe[i]) {
-         delete fXSxNe[i];
-         fXSxNe[i]=NULL;
+      if (fFXSxNe[i]) {
+         delete fFXSxNe[i];
+         fFXSxNe[i]=NULL;
       }
-      if (fXSxN2[i]) {
-         delete fXSxN2[i];
-         fXSxN2[i]=NULL;
+      if (fFXSxN2[i]) {
+         delete fFXSxN2[i];
+         fFXSxN2[i]=NULL;
       }
       if (fHNevt2[i]) {
          delete fHNevt2[i];
