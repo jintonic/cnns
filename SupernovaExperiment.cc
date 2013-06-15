@@ -147,21 +147,21 @@ Double_t SupernovaExperiment::Nevt2(UShort_t type, Double_t time, Double_t Enr)
 //______________________________________________________________________________
 //
 
-TF1* SupernovaExperiment::FNevtE(UShort_t type, Double_t maxEr)
+TF1* SupernovaExperiment::FNevtE(UShort_t type, Double_t maxEnr)
 {
    if (fFNevtE[type]) {
       Double_t min, max;
       fFNevtE[type]->GetRange(min,max);
-      if (max!=maxEr) {
+      if (max!=maxEnr) {
          Info("FNevtE","Reset range of recoil energy.");
-         fFNevtE[type]->SetRange(0,maxEr);
+         fFNevtE[type]->SetRange(0,maxEnr);
       }
       return fFNevtE[type];
    }
 
    fFNevtE[type] = new TF1(Form("fNevtE_%s_%s_%f_%d",
             fMaterial->GetName(), fModel->GetName(), fMass, type),
-         this, &SupernovaExperiment::NevtE, 0, maxEr,1);
+         this, &SupernovaExperiment::NevtE, 0, maxEnr,1);
    fFNevtE[type]->SetParameter(0,type);
 
    if (type==0) {
@@ -182,23 +182,23 @@ TF1* SupernovaExperiment::FNevtE(UShort_t type, Double_t maxEr)
 //______________________________________________________________________________
 //
 
-TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t nEr)
+TF1* SupernovaExperiment::FXSxNe(UShort_t type, Double_t Enr)
 {
    if (fFXSxNe[type]) {
-      fFXSxNe[type]->SetParameter(0,nEr);
+      fFXSxNe[type]->SetParameter(0,Enr);
       return fFXSxNe[type];
    }
 
    fFXSxNe[type] = new TF1(Form("fFXSxNe%s%s%f%d",
             fModel->GetName(), fMaterial->GetName(), fMass, type), this, 
          &SupernovaExperiment::XSxNe, 0., fModel->EMax(),2);
-   fFXSxNe[type]->SetParameter(0,nEr);
+   fFXSxNe[type]->SetParameter(0,Enr);
    fFXSxNe[type]->SetParameter(1,type);
 
    if (type==0) {
       fFXSxNe[type]->SetTitle(Form(
                "%s, target: %s, recoil energy: %.1f keV;neutrino energy [MeV];1/MeV^{4}", 
-               fModel->GetName(), fMaterial->GetTitle(), nEr));
+               fModel->GetName(), fMaterial->GetTitle(), Enr));
       fFXSxNe[type]->SetLineColor(kGray+2);
       fFXSxNe[type]->SetLineWidth(2);
    } else {
@@ -247,24 +247,24 @@ TF1* SupernovaExperiment::FXSxN2(UShort_t type, Double_t time, Double_t Enr)
 //______________________________________________________________________________
 //
 
-TH1D* SupernovaExperiment::HNevtE(UShort_t type, Double_t maxEr)
+TH1D* SupernovaExperiment::HNevtE(UShort_t type, Double_t maxEnr)
 {
    if (type>6) {
       Warning("HNevtE","Type of neutrinos must be in 0, 1, 2, 3, 4, 5, 6!");
       Warning("HNevtE","Return NULL pointer!");
       return 0;
    }
-   FNevtE(type,maxEr/keV)->SetNpx(200);
-   TH1D *h = (TH1D*) FNevtE(type,maxEr/keV)->GetHistogram();
+   FNevtE(type,maxEnr/keV)->SetNpx(200);
+   TH1D *h = (TH1D*) FNevtE(type,maxEnr/keV)->GetHistogram();
    return h;
 }
 
 //______________________________________________________________________________
 //
 
-Double_t SupernovaExperiment::Nevt(Double_t maxEr)
+Double_t SupernovaExperiment::Nevt(Double_t maxEnr)
 {
-   TH1D* h = HNevtE(0,maxEr);
+   TH1D* h = HNevtE(0,maxEnr);
    Double_t minEr = fMaterial->Enr(Threshold());
    Int_t startBin=0, endBin=0;
    for (Int_t i=1; i<=h->GetNbinsX(); i++) {
@@ -272,7 +272,7 @@ Double_t SupernovaExperiment::Nevt(Double_t maxEr)
       if (h->GetBinLowEdge(i)*keV>=minEr) break;
    }
    for (Int_t i=1; i<=h->GetNbinsX(); i++) {
-      if (h->GetBinLowEdge(i)*keV>=maxEr) break;
+      if (h->GetBinLowEdge(i)*keV>=maxEnr) break;
       endBin=i;
    }
    return h->Integral(startBin,endBin,"width");
@@ -281,14 +281,14 @@ Double_t SupernovaExperiment::Nevt(Double_t maxEr)
 //______________________________________________________________________________
 //
 
-TH1D* SupernovaExperiment::HXSxNe(UShort_t type, Double_t nEr)
+TH1D* SupernovaExperiment::HXSxNe(UShort_t type, Double_t Enr)
 {
    if (type>6) {
       Warning("HXSxNe","Type of neutrinos must be in 0, 1, 2, 3, 4, 5, 6!");
       Warning("HXSxNe","Return NULL pointer!");
       return 0;
    }
-   TH1D *h = (TH1D*) FXSxNe(type, nEr/keV)->GetHistogram();
+   TH1D *h = (TH1D*) FXSxNe(type, Enr/keV)->GetHistogram();
    return h;
 }
 

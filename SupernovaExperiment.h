@@ -48,15 +48,15 @@ class SupernovaExperiment : public TNamed
       void SetDistance(Double_t distance) { fDistance=distance; }
       Double_t Distance() { return fDistance; }
 
-      TF1* FXSxNe(UShort_t type, Double_t nEr);
+      TF1* FXSxNe(UShort_t type, Double_t Enr);
 
-      TF1* FNevtE(UShort_t type, Double_t maxEr);
+      TF1* FNevtE(UShort_t type, Double_t maxEnr);
 
-      TH1D* HXSxNe(UShort_t type, Double_t nEr);
+      TH1D* HXSxNe(UShort_t type, Double_t Enr);
 
-      TH1D* HNevtE(UShort_t type, Double_t maxEr);
+      TH1D* HNevtE(UShort_t type, Double_t maxEnr);
 
-      Double_t Nevt(Double_t maxEr); // total number of events
+      Double_t Nevt(Double_t maxEnr); // total number of events
 
       TF1* FXSxN2(UShort_t type, Double_t time, Double_t Enr);
       Double_t Nevt2(UShort_t type, Double_t time, Double_t Enr);
