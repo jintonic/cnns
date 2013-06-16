@@ -1,4 +1,5 @@
 #include "SupernovaExperiment.h"
+#include "LXeDetector.h"
 
 #include <NEUS/NakazatoModel.h>
 #include <NEUS/LivermoreModel.h>
@@ -38,18 +39,22 @@ int main ()
    divari->UseDivariData();
 
 
-   // target material
+   // set up experiment
    NaturalXe *natXe = new NaturalXe;
    LiquidXenon *LXe = new LiquidXenon;
    LXe->AddElement(natXe,1);
 
-
-   // set up experiment
-   SupernovaExperiment *xmass = new SupernovaExperiment(LXe);
-   xmass->SetDistance(196.22*pc); // Betelgeuse
-   xmass->SetDistance(10*kpc); // galaxy center
+   LXeDetector *xmass = new LXeDetector("XMASS","XMASS experiment");
+   xmass->SetTargetMaterial(LXe);
    xmass->SetTargetMass(835*kg);
-   xmass->SetThreshold(0.*keV);
+   xmass->SetLightYield(14.7*PE/keV);
+   xmass->SetThreshold(0*PE);
+   Printf("Threshold corresponding to 0 PE in XMASS: %.4f keVnr",
+         xmass->Threshold()/keV);
+
+   SupernovaExperiment *xmass4sn = new SupernovaExperiment(xmass);
+   xmass4sn->SetDistance(196.22*pc); // Betelgeuse
+   xmass4sn->SetDistance(10*kpc); // galaxy center
 
 
    // draw results
@@ -57,11 +62,11 @@ int main ()
    can->Print("XMASS.ps[");
 
    // dXS()
-   xmass->SetSupernovaModel(divari);
-   TH1D *h0 = xmass->HXSxNe(0,5*keV);
-   TH1D *h1 = xmass->HXSxNe(1,5*keV);
-   TH1D *h2 = xmass->HXSxNe(2,5*keV);
-   TH1D *h3 = xmass->HXSxNe(3,5*keV);
+   xmass4sn->SetSupernovaModel(divari);
+   TH1D *h0 = xmass4sn->HXSxNe(0,5*keV);
+   TH1D *h1 = xmass4sn->HXSxNe(1,5*keV);
+   TH1D *h2 = xmass4sn->HXSxNe(2,5*keV);
+   TH1D *h3 = xmass4sn->HXSxNe(3,5*keV);
 
    h0->Draw();
    h1->Draw("same");
@@ -80,10 +85,10 @@ int main ()
    can->Print("XMASS.ps");
 
    // Divari approximation
-   h0 = xmass->HNevtE(0);
-   h1 = xmass->HNevtE(1);
-   h2 = xmass->HNevtE(2);
-   h3 = xmass->HNevtE(3);
+   h0 = xmass4sn->HNevtE(0);
+   h1 = xmass4sn->HNevtE(1);
+   h2 = xmass4sn->HNevtE(2);
+   h3 = xmass4sn->HNevtE(3);
 
    h0->Draw();
    h2->Draw("same");
@@ -94,11 +99,11 @@ int main ()
    can->Print("XMASS.ps");
 
    // Totani's Livermore model
-   xmass->SetSupernovaModel(totani);
-   h0 = xmass->HNevtE(0);
-   h1 = xmass->HNevtE(1);
-   h2 = xmass->HNevtE(2);
-   h3 = xmass->HNevtE(3);
+   xmass4sn->SetSupernovaModel(totani);
+   h0 = xmass4sn->HNevtE(0);
+   h1 = xmass4sn->HNevtE(1);
+   h2 = xmass4sn->HNevtE(2);
+   h3 = xmass4sn->HNevtE(3);
 
    h0->Draw();
    h2->Draw("same");
@@ -109,11 +114,11 @@ int main ()
    can->Print("XMASS.ps");
 
    // weakest Nakazato Model
-   xmass->SetSupernovaModel(model2001);
-   h0 = xmass->HNevtE(0);
-   h1 = xmass->HNevtE(1);
-   h2 = xmass->HNevtE(2);
-   h3 = xmass->HNevtE(3);
+   xmass4sn->SetSupernovaModel(model2001);
+   h0 = xmass4sn->HNevtE(0);
+   h1 = xmass4sn->HNevtE(1);
+   h2 = xmass4sn->HNevtE(2);
+   h3 = xmass4sn->HNevtE(3);
 
    h0->Draw();
    h2->Draw("same");
@@ -124,11 +129,11 @@ int main ()
    can->Print("XMASS.ps");
 
    // brightest Nakazato Model
-   xmass->SetSupernovaModel(model3003);
-   h0 = xmass->HNevtE(0);
-   h1 = xmass->HNevtE(1);
-   h2 = xmass->HNevtE(2);
-   h3 = xmass->HNevtE(3);
+   xmass4sn->SetSupernovaModel(model3003);
+   h0 = xmass4sn->HNevtE(0);
+   h1 = xmass4sn->HNevtE(1);
+   h2 = xmass4sn->HNevtE(2);
+   h3 = xmass4sn->HNevtE(3);
 
    h0->Draw();
    h2->Draw("same");
@@ -139,11 +144,11 @@ int main ()
    can->Print("XMASS.ps");
 
    // black hole in Nakazato Model
-   xmass->SetSupernovaModel(blackHole);
-   h0 = xmass->HNevtE(0);
-   h1 = xmass->HNevtE(1);
-   h2 = xmass->HNevtE(2);
-   h3 = xmass->HNevtE(3);
+   xmass4sn->SetSupernovaModel(blackHole);
+   h0 = xmass4sn->HNevtE(0);
+   h1 = xmass4sn->HNevtE(1);
+   h2 = xmass4sn->HNevtE(2);
+   h3 = xmass4sn->HNevtE(3);
 
    h0->Draw();
    h2->Draw("same");
@@ -154,8 +159,8 @@ int main ()
    can->Print("XMASS.ps");
 
    // time dependent event rate
-   xmass->SetSupernovaModel(totani);
-   TH2D *hN = xmass->HNevt2(0);
+   xmass4sn->SetSupernovaModel(totani);
+   TH2D *hN = xmass4sn->HNevt2(0);
 
    hN->GetXaxis()->SetRangeUser(1.2e-2,17.9012);
    can->SetLogx();
@@ -163,11 +168,13 @@ int main ()
    hN->Draw("colz");
    can->Print("XMASS.ps");
 
-   xmass->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
-   TH1 *hc = xmass->HNevtT(0)->DrawCopy();
+   xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
+   TH1 *hc = xmass4sn->HNevtT(0)->DrawCopy();
 
-   xmass->SetThreshold(0.3*keV);
-   TH1D *hT = xmass->HNevtT(0);
+   xmass->SetThreshold(4*PE);
+   Printf("Threshold corresponding to 4 PE in XMASS: %.4f keVnr",
+         xmass->Threshold()/keV);
+   TH1D *hT = xmass4sn->HNevtT(0);
    hT->SetLineColor(kBlue);
    hT->Draw("same");
 
@@ -180,14 +187,14 @@ int main ()
 
    can->Print("XMASS.ps]");
 
-   xmass->SetSupernovaModel(divari);
-   Printf("number of events in Divari approximation: %.1f", xmass->Nevt());
-   xmass->SetSupernovaModel(totani);
-   Printf("number of events in Livermore model: %.1f", xmass->Nevt());
-   xmass->SetSupernovaModel(model2001);
-   Printf("number of events in Nakazato model 2001: %.1f", xmass->Nevt());
-   xmass->SetSupernovaModel(model3003);
-   Printf("number of events in Nakazato model 3003: %.1f", xmass->Nevt());
-   xmass->SetSupernovaModel(blackHole);
-   Printf("number of events in black hole: %.1f", xmass->Nevt()); 
+   xmass4sn->SetSupernovaModel(divari);
+   Printf("number of events in Divari approximation: %.1f", xmass4sn->Nevt());
+   xmass4sn->SetSupernovaModel(totani);
+   Printf("number of events in Livermore model: %.1f", xmass4sn->Nevt());
+   xmass4sn->SetSupernovaModel(model2001);
+   Printf("number of events in Nakazato model 2001: %.1f", xmass4sn->Nevt());
+   xmass4sn->SetSupernovaModel(model3003);
+   Printf("number of events in Nakazato model 3003: %.1f", xmass4sn->Nevt());
+   xmass4sn->SetSupernovaModel(blackHole);
+   Printf("number of events in black hole: %.1f", xmass4sn->Nevt()); 
 }
