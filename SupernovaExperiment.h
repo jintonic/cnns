@@ -19,15 +19,14 @@ class SupernovaExperiment : public TNamed
       Double_t fDistance; // distance between detector and Supernova
       Double_t fThreshold; // energy threshold of detector
 
-      TF1 *fFXSxNe[7]; // dXS(Ev) * Ne(Ev)
       TF1 *fFXSxN2[7]; // dXS(Ev) * N2(time,Ev)
-      TF1 *fFNevtE[7]; // Nevt(Enr) in TF1 format
+      TF1 *fFXSxNe[7]; // dXS(Ev) * Ne(Ev)
       TH2D *fHNevt2[7]; // Nevt(t, Enr)
       TH1D *fHNevtT[7]; // Nevt(t)
+      TH1D *fHNevtE[7]; // Nevt(Enr)
 
       Double_t XSxNe(Double_t *x, Double_t *parameter); // function of dXS * Ne
       Double_t XSxN2(Double_t *x, Double_t *parameter); // function of dXS * N2
-      Double_t NevtE(Double_t *x, Double_t *parameter); // function of NevtE
 
    public:
       SupernovaExperiment(MAD::Material *material=0, NEUS::SupernovaModel *model=0);
@@ -42,21 +41,19 @@ class SupernovaExperiment : public TNamed
       void SetTargetMaterial(MAD::Material *material) { fMaterial=material; }
       MAD::Material* TargetMaterial() { return fMaterial; }
 
-      void SetSupernovaModel(NEUS::SupernovaModel *model) { fModel = model; }
+      void SetSupernovaModel(NEUS::SupernovaModel *model)
+      { Clear(); fModel = model; }
       NEUS::SupernovaModel* Model() { return fModel; }
 
       void SetDistance(Double_t distance) { fDistance=distance; }
       Double_t Distance() { return fDistance; }
 
       TF1* FXSxNe(UShort_t type, Double_t Enr);
-
-      TF1* FNevtE(UShort_t type, Double_t maxEnr);
-
       TH1D* HXSxNe(UShort_t type, Double_t Enr);
+      Double_t NevtE(UShort_t type, Double_t Enr);
+      TH1D* HNevtE(UShort_t type); // Nevt(Enr)
 
-      TH1D* HNevtE(UShort_t type, Double_t maxEnr);
-
-      Double_t Nevt(Double_t maxEnr); // total number of events
+      Double_t Nevt(); // total number of events
 
       TF1* FXSxN2(UShort_t type, Double_t time, Double_t Enr);
       Double_t Nevt2(UShort_t type, Double_t time, Double_t Enr);

@@ -11,7 +11,6 @@ using namespace MAD;
 #include <UNIC/Units.h>
 using namespace UNIC;
 
-#include <TF1.h>
 #include <TH2D.h>
 #include <TCanvas.h>
 #include <TLegend.h>
@@ -50,7 +49,7 @@ int main ()
    xmass->SetDistance(196.22*pc); // Betelgeuse
    xmass->SetDistance(10*kpc); // galaxy center
    xmass->SetTargetMass(835*kg);
-   xmass->SetThreshold(0.3*keV);
+   xmass->SetThreshold(0.*keV);
 
 
    // draw results
@@ -81,13 +80,11 @@ int main ()
    can->Print("XMASS.ps");
 
    // Divari approximation
-   Double_t maxEr = 50*keV;
-   h0 = xmass->HNevtE(0,maxEr);
-   h1 = xmass->HNevtE(1,maxEr);
-   h2 = xmass->HNevtE(2,maxEr);
-   h3 = xmass->HNevtE(3,maxEr);
+   h0 = xmass->HNevtE(0);
+   h1 = xmass->HNevtE(1);
+   h2 = xmass->HNevtE(2);
+   h3 = xmass->HNevtE(3);
 
-   h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -95,18 +92,14 @@ int main ()
 
    leg->Draw();
    can->Print("XMASS.ps");
-
-   Printf("number of events in Divari approximation: %.1f", xmass->Nevt(maxEr));
 
    // Totani's Livermore model
    xmass->SetSupernovaModel(totani);
-   xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevtE(0,maxEr);
-   h1 = xmass->HNevtE(1,maxEr);
-   h2 = xmass->HNevtE(2,maxEr);
-   h3 = xmass->HNevtE(3,maxEr);
+   h0 = xmass->HNevtE(0);
+   h1 = xmass->HNevtE(1);
+   h2 = xmass->HNevtE(2);
+   h3 = xmass->HNevtE(3);
 
-   h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -114,18 +107,14 @@ int main ()
 
    leg->Draw();
    can->Print("XMASS.ps");
-
-   Printf("number of events in Livermore model: %.1f", xmass->Nevt(maxEr));
 
    // weakest Nakazato Model
    xmass->SetSupernovaModel(model2001);
-   xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevtE(0,maxEr);
-   h1 = xmass->HNevtE(1,maxEr);
-   h2 = xmass->HNevtE(2,maxEr);
-   h3 = xmass->HNevtE(3,maxEr);
+   h0 = xmass->HNevtE(0);
+   h1 = xmass->HNevtE(1);
+   h2 = xmass->HNevtE(2);
+   h3 = xmass->HNevtE(3);
 
-   h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -133,18 +122,14 @@ int main ()
 
    leg->Draw();
    can->Print("XMASS.ps");
-
-   Printf("number of events in Nakazato model 2001: %.1f", xmass->Nevt(maxEr));
 
    // brightest Nakazato Model
    xmass->SetSupernovaModel(model3003);
-   xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevtE(0,maxEr);
-   h1 = xmass->HNevtE(1,maxEr);
-   h2 = xmass->HNevtE(2,maxEr);
-   h3 = xmass->HNevtE(3,maxEr);
+   h0 = xmass->HNevtE(0);
+   h1 = xmass->HNevtE(1);
+   h2 = xmass->HNevtE(2);
+   h3 = xmass->HNevtE(3);
 
-   h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -152,18 +137,14 @@ int main ()
 
    leg->Draw();
    can->Print("XMASS.ps");
-
-   Printf("number of events in Nakazato model 3003: %.1f", xmass->Nevt(maxEr));
 
    // black hole in Nakazato Model
    xmass->SetSupernovaModel(blackHole);
-   xmass->Clear(); // clear internal functions
-   h0 = xmass->HNevtE(0,maxEr);
-   h1 = xmass->HNevtE(1,maxEr);
-   h2 = xmass->HNevtE(2,maxEr);
-   h3 = xmass->HNevtE(3,maxEr);
+   h0 = xmass->HNevtE(0);
+   h1 = xmass->HNevtE(1);
+   h2 = xmass->HNevtE(2);
+   h3 = xmass->HNevtE(3);
 
-   h0->GetYaxis()->SetRangeUser(0,10);
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -172,17 +153,11 @@ int main ()
    leg->Draw();
    can->Print("XMASS.ps");
 
-   Printf("number of events in black hole: %.1f", xmass->Nevt(maxEr)); 
-
-
    // time dependent event rate
    xmass->SetSupernovaModel(totani);
-   xmass->SetThreshold(0.*keV);
-   xmass->Clear();
    TH2D *hN = xmass->HNevt2(0);
 
    hN->GetXaxis()->SetRangeUser(1.2e-2,17.9012);
-   hN->GetZaxis()->SetRangeUser(1e-12,10);
    can->SetLogx();
    can->SetLogz();
    hN->Draw("colz");
@@ -198,10 +173,21 @@ int main ()
 
    leg->Clear();
    leg->SetHeader("Detector threshold:");
-   leg->AddEntry(hc,"0 keV","l");
-   leg->AddEntry(hT,"0.3 keV","l");
+   leg->AddEntry(hc,"0 keVee","l");
+   leg->AddEntry(hT,"0.3 keVee","l");
    leg->Draw();
    can->Print("XMASS.ps");
 
    can->Print("XMASS.ps]");
+
+   xmass->SetSupernovaModel(divari);
+   Printf("number of events in Divari approximation: %.1f", xmass->Nevt());
+   xmass->SetSupernovaModel(totani);
+   Printf("number of events in Livermore model: %.1f", xmass->Nevt());
+   xmass->SetSupernovaModel(model2001);
+   Printf("number of events in Nakazato model 2001: %.1f", xmass->Nevt());
+   xmass->SetSupernovaModel(model3003);
+   Printf("number of events in Nakazato model 3003: %.1f", xmass->Nevt());
+   xmass->SetSupernovaModel(blackHole);
+   Printf("number of events in black hole: %.1f", xmass->Nevt()); 
 }
