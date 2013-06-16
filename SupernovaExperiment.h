@@ -6,18 +6,16 @@ class TF1;
 class TH1D;
 class TH2D;
 
-namespace MAD { class Material; }
+class Detector;
+
 namespace NEUS { class SupernovaModel; }
 
 class SupernovaExperiment : public TNamed
 {
    protected:
-      MAD::Material *fMaterial; // target material
+      Detector* fDetector;
       NEUS::SupernovaModel *fModel; // supernova model
-
-      Double_t fMass;      // mass of target material
       Double_t fDistance; // distance between detector and Supernova
-      Double_t fThreshold; // energy threshold of detector
 
       TF1 *fFXSxN2[7]; // dXS(Ev) * N2(time,Ev)
       TF1 *fFXSxNe[7]; // dXS(Ev) * Ne(Ev)
@@ -29,17 +27,10 @@ class SupernovaExperiment : public TNamed
       Double_t XSxN2(Double_t *x, Double_t *parameter); // function of dXS * N2
 
    public:
-      SupernovaExperiment(MAD::Material *material=0, NEUS::SupernovaModel *model=0);
+      SupernovaExperiment(Detector *detector=0, NEUS::SupernovaModel *model=0);
       virtual ~SupernovaExperiment() { Clear(); } 
 
-      void SetTargetMass(Double_t m) { fMass=m; }
-      Double_t TargetMass() { return fMass; }
-
-      void SetThreshold(Double_t threshold) { fThreshold=threshold; }
-      Double_t Threshold() { return fThreshold; }
-
-      void SetTargetMaterial(MAD::Material *material) { fMaterial=material; }
-      MAD::Material* TargetMaterial() { return fMaterial; }
+      void SeteDetector(Detector *detector) { Clear(); fDetector = detector; }
 
       void SetSupernovaModel(NEUS::SupernovaModel *model)
       { Clear(); fModel = model; }
