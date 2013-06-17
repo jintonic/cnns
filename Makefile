@@ -180,6 +180,6 @@ tags:
 	ctags --c-kinds=+p $(HEADERS) $(SOURCES)
 
 $(EXES):%.exe:%.C
-	$(CXX) $< $(CXXFLAGS) $(LIBS) -lGeom -L. -l$(LIBNAME) -o $@
+	$(CXX) $< $(CXXFLAGS) -L. -l$(LIBNAME) $(LIBS) -lGeom -o $@
 
 .PHONY: all info tags clean
