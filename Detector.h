@@ -27,6 +27,8 @@ class Detector : public TNamed
       virtual void SetThreshold(Double_t threshold) { fThreshold=threshold; }
       Double_t Threshold() { return fThreshold; }
 
+      virtual Double_t TriggerEfficiency(Double_t Enr) { return 1.; }
+
       ClassDef(Detector,1);
 };
 
