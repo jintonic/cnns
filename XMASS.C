@@ -34,12 +34,10 @@ int main ()
    LivermoreModel *divari = new LivermoreModel;
    divari->UseDivariData();
 
+   // set up detector
+   XMASS835kg *xmass = new XMASS835kg;
 
    // set up experiment
-   XMASS835kg *xmass = new XMASS835kg;
-   Printf("Threshold corresponding to 0 PE in XMASS: %.4f keVnr",
-         xmass->Threshold()/keV);
-
    SupernovaExperiment *xmass4sn = new SupernovaExperiment(xmass);
    xmass4sn->SetDistance(196.22*pc); // Betelgeuse
    xmass4sn->SetDistance(10*kpc); // galaxy center
@@ -78,6 +76,9 @@ int main ()
    h2 = xmass4sn->HNevtE(2);
    h3 = xmass4sn->HNevtE(3);
 
+   TH1 *hN0[5], *hN1[5];
+   hN0[0] = (TH1*)h0->Clone("hN00");
+   hN1[0] = (TH1*)h0->Clone("hN10");
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -93,6 +94,8 @@ int main ()
    h2 = xmass4sn->HNevtE(2);
    h3 = xmass4sn->HNevtE(3);
 
+   hN0[1] = (TH1*)h0->Clone("hN01");
+   hN1[1] = (TH1*)h0->Clone("hN11");
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -108,6 +111,8 @@ int main ()
    h2 = xmass4sn->HNevtE(2);
    h3 = xmass4sn->HNevtE(3);
 
+   hN0[2] = (TH1*)h0->Clone("hN02");
+   hN1[2] = (TH1*)h0->Clone("hN12");
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -123,6 +128,8 @@ int main ()
    h2 = xmass4sn->HNevtE(2);
    h3 = xmass4sn->HNevtE(3);
 
+   hN0[3] = (TH1*)h0->Clone("hN03");
+   hN1[3] = (TH1*)h0->Clone("hN13");
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -138,6 +145,8 @@ int main ()
    h2 = xmass4sn->HNevtE(2);
    h3 = xmass4sn->HNevtE(3);
 
+   hN0[4] = (TH1*)h0->Clone("hN04");
+   hN1[4] = (TH1*)h0->Clone("hN14");
    h0->Draw();
    h2->Draw("same");
    h1->Draw("same");
@@ -145,6 +154,37 @@ int main ()
 
    leg->Draw();
    can->Print("XMASS.ps");
+
+   // fold in detection efficiency
+   can->SetLogx(0);
+   xmass->HEff()->Draw("E0");
+   can->Print("XMASS.ps");
+
+   leg->Clear();
+   Double_t nevt[5] = {0}, content;
+   for (Int_t j=0; j<5; j++) { // loop over models
+      for (Int_t i=1; i<=hN0[j]->GetNbinsX(); i++) { // loop over Enr
+         content = hN1[j]->GetBinContent(i) // nevt(Enr)/keV x eff(Enr)
+            * xmass->Efficiency(hN1[j]->GetBinCenter(i)*keV);
+         hN1[j]->SetBinContent(i, content);
+         nevt[j]+=content*hN1[j]->GetBinWidth(i);
+      }
+      hN0[j]->Draw();
+      hN1[j]->SetLineColor(kRed);
+      hN1[j]->Draw("same");
+      if (j==0) {
+         leg->AddEntry(hN0[j],"All events","l");
+         leg->AddEntry(hN1[j],"Detected events","l");
+      }
+      leg->Draw();
+      can->Print("XMASS.ps");
+   }
+
+   Printf("number of events in Divari approximation: %.1f", nevt[0]);
+   Printf("number of events in Livermore model: %.1f", nevt[1]);
+   Printf("number of events in Nakazato model 2001: %.1f", nevt[2]);
+   Printf("number of events in Nakazato model 3003: %.1f", nevt[3]);
+   Printf("number of events in black hole: %.1f", nevt[4]); 
 
    // time dependent event rate
    xmass4sn->SetSupernovaModel(totani);
@@ -159,9 +199,6 @@ int main ()
    xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
    TH1 *hc = xmass4sn->HNevtT(0)->DrawCopy();
 
-   xmass->SetThreshold(4*PE);
-   Printf("Threshold corresponding to 4 PE in XMASS: %.4f keVnr",
-         xmass->Threshold()/keV);
    TH1D *hT = xmass4sn->HNevtT(0);
    hT->SetLineColor(kBlue);
    hT->Draw("same");
@@ -173,20 +210,5 @@ int main ()
    leg->Draw();
    can->Print("XMASS.ps");
 
-   can->SetLogx(0);
-   xmass->HTrgEff()->Draw("E0");
-   can->Print("XMASS.ps");
-
    can->Print("XMASS.ps]");
-
-   xmass4sn->SetSupernovaModel(divari);
-   Printf("number of events in Divari approximation: %.1f", xmass4sn->Nevt());
-   xmass4sn->SetSupernovaModel(totani);
-   Printf("number of events in Livermore model: %.1f", xmass4sn->Nevt());
-   xmass4sn->SetSupernovaModel(model2001);
-   Printf("number of events in Nakazato model 2001: %.1f", xmass4sn->Nevt());
-   xmass4sn->SetSupernovaModel(model3003);
-   Printf("number of events in Nakazato model 3003: %.1f", xmass4sn->Nevt());
-   xmass4sn->SetSupernovaModel(blackHole);
-   Printf("number of events in black hole: %.1f", xmass4sn->Nevt()); 
 }
