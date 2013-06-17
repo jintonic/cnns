@@ -22,7 +22,7 @@ class XMASS835kg : public LXeDetector
       ~XMASS835kg();
 
       TH1D* HEff();
-      Double_t Acceptance(Double_t Enr);
+      Double_t Efficiency(Double_t Enr);
 
       ClassDef(XMASS835kg,1);
 };
