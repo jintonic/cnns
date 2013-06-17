@@ -49,7 +49,7 @@ class SupernovaExperiment : public TNamed
       TF1* FXSxN2(UShort_t type, Double_t time, Double_t Enr);
       Double_t Nevt2(UShort_t type, Double_t time, Double_t Enr);
       TH2D* HNevt2(UShort_t type); // Nevt(t, Enr)
-      TH1D* HNevtT(UShort_t type); // Nevt(t)
+      TH1D* HNevtT(UShort_t type, Bool_t detectableOnly=kFALSE); // Nevt(t)
 
       /**
        * Delete internal objects.

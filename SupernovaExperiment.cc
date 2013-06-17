@@ -329,11 +329,12 @@ TH2D* SupernovaExperiment::HNevt2(UShort_t type)
 //______________________________________________________________________________
 //
 
-TH1D* SupernovaExperiment::HNevtT(UShort_t type)
+TH1D* SupernovaExperiment::HNevtT(UShort_t type, Bool_t detectableOnly)
 {
    TH2D *h = HNevt2(type);
 
-   TString name = Form("hNevtT-%d-%f", type, fDetector->Threshold());
+   TString name = Form("hNevtT-%d-%f-%d", 
+         type, fDetector->Threshold(), detectableOnly);
    if (fHNevtT[type]) {
       if (name.CompareTo(fHNevtT[type]->GetName())==0) return fHNevtT[type];
       else delete fHNevtT[type];
@@ -349,8 +350,10 @@ TH1D* SupernovaExperiment::HNevtT(UShort_t type)
       Double_t nevt=0;
       for (Int_t iy=1; iy<=h->GetNbinsY(); iy++) {
          Double_t dn = h->GetBinContent(ix,iy);
-         Double_t er = h->GetYaxis()->GetBinWidth(iy);
-         nevt+=dn*er;
+         Double_t de = h->GetYaxis()->GetBinWidth(iy);
+         if (detectableOnly) nevt+=dn*de*fDetector->Efficiency(
+               h->GetYaxis()->GetBinCenter(iy)*keV);
+         else nevt+=dn*de;
       }
       fHNevtT[type]->SetBinContent(ix, nevt);
    }
