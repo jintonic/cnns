@@ -89,7 +89,7 @@ TH1D* XMASS835kg::HEff()
    }
 
    fHEff->SetXTitle("nuclear recoil energy [keV]");
-   fHEff->SetYTitle("acceptance");
+   fHEff->SetYTitle("efficiency");
    fHEff->SetStats(0);
 
    return fHEff;
@@ -98,7 +98,7 @@ TH1D* XMASS835kg::HEff()
 //______________________________________________________________________________
 //
 
-Double_t XMASS835kg::Acceptance(Double_t Enr)
+Double_t XMASS835kg::Efficiency(Double_t Enr)
 {
    return HEff()->Interpolate(Enr/keV);
 }
