@@ -169,14 +169,18 @@ int main ()
          hN1[j]->SetBinContent(i, content);
          nevt[j]+=content*hN1[j]->GetBinWidth(i);
       }
-      hN0[j]->Draw();
+      hN0[j]->SetLineColor(kBlue);
       hN1[j]->SetLineColor(kRed);
+
+      hN0[j]->Draw();
       hN1[j]->Draw("same");
+
       if (j==0) {
          leg->AddEntry(hN0[j],"All events","l");
          leg->AddEntry(hN1[j],"Detected events","l");
       }
       leg->Draw();
+
       can->Print("XMASS.ps");
    }
 
@@ -197,16 +201,34 @@ int main ()
    can->Print("XMASS.ps");
 
    xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
-   TH1 *hc = xmass4sn->HNevtT(0)->DrawCopy();
+   TH1 *hT0 = xmass4sn->HNevtT(0)->DrawCopy();
+   hT0->SetLineColor(kBlue);
+   TH1D *hT1 = xmass4sn->HNevtT(0,kTRUE);
+   hT1->SetLineColor(kRed);
+   hT1->Draw("same");
 
-   TH1D *hT = xmass4sn->HNevtT(0);
-   hT->SetLineColor(kBlue);
-   hT->Draw("same");
+   leg->Draw();
+   can->Print("XMASS.ps");
 
-   leg->Clear();
-   leg->SetHeader("Detector threshold:");
-   leg->AddEntry(hc,"0 keVee","l");
-   leg->AddEntry(hT,"0.3 keVee","l");
+   xmass4sn->SetSupernovaModel(model2001);
+   xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
+   hT0 = xmass4sn->HNevtT(0)->DrawCopy();
+   hT0->SetLineColor(kBlue);
+   hT1 = xmass4sn->HNevtT(0,kTRUE);
+   hT1->SetLineColor(kRed);
+   hT1->Draw("same");
+
+   leg->Draw();
+   can->Print("XMASS.ps");
+
+   xmass4sn->SetSupernovaModel(model3003);
+   xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
+   hT0 = xmass4sn->HNevtT(0)->DrawCopy();
+   hT0->SetLineColor(kBlue);
+   hT1 = xmass4sn->HNevtT(0,kTRUE);
+   hT1->SetLineColor(kRed);
+   hT1->Draw("same");
+
    leg->Draw();
    can->Print("XMASS.ps");
 
