@@ -13,7 +13,7 @@ using namespace UNIC;
 //
 
 XMASS835kg::XMASS835kg(const char *name, const char *title) :
-   LXeDetector(name, title), fHTrgEff(0)
+   LXeDetector(name, title), fHEff(0)
 {
    fNatXe = new NaturalXe;
    fLXe = new LiquidXenon;
@@ -32,15 +32,15 @@ XMASS835kg::~XMASS835kg()
 {
    if (fNatXe) delete fNatXe;
    if (fLXe) delete fLXe;
-   if (fHTrgEff) delete fHTrgEff;
+   if (fHEff) delete fHEff;
 }
 
 //______________________________________________________________________________
 //
 
-TH1D* XMASS835kg::HTrgEff()
+TH1D* XMASS835kg::HEff()
 {
-   if (fHTrgEff) return fHTrgEff;
+   if (fHEff) return fHEff;
 
    // define bins
    Int_t nbinse=0;
@@ -55,7 +55,7 @@ TH1D* XMASS835kg::HTrgEff()
    ebins[nbinse]=e;
 
    // create histogram
-   fHTrgEff = new TH1D("hTrgEff","",nbinse,ebins);
+   fHEff = new TH1D("hEff","",nbinse,ebins);
 
    Double_t content[70] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
       0.0, 0.0, 0.002915452, 0.002915452, 0.007575758, 0.01567398, 0.03643725,
@@ -83,15 +83,15 @@ TH1D* XMASS835kg::HTrgEff()
       0.05824679, 0.06074567};
 
    for (Int_t ix=1; ix<=nbinse; ix++) {
-      fHTrgEff->SetBinContent(ix,content[ix-1]);
-      fHTrgEff->SetBinError(ix,errors[ix-1]);
+      fHEff->SetBinContent(ix,content[ix-1]);
+      fHEff->SetBinError(ix,errors[ix-1]);
    }
 
-   fHTrgEff->SetXTitle("nuclear recoil energy [keV]");
-   fHTrgEff->SetYTitle("acceptance");
-   fHTrgEff->SetStats(0);
+   fHEff->SetXTitle("nuclear recoil energy [keV]");
+   fHEff->SetYTitle("acceptance");
+   fHEff->SetStats(0);
 
-   return fHTrgEff;
+   return fHEff;
 }
 
 //______________________________________________________________________________
@@ -99,5 +99,5 @@ TH1D* XMASS835kg::HTrgEff()
 
 Double_t XMASS835kg::Acceptance(Double_t Enr)
 {
-   return HTrgEff()->Interpolate(Enr/keV);
+   return HEff()->Interpolate(Enr/keV);
 }

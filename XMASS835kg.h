@@ -12,7 +12,7 @@ namespace MAD {
 class XMASS835kg : public LXeDetector
 {
    private:
-      TH1D *fHTrgEff;
+      TH1D *fHEff;
       MAD::NaturalXe *fNatXe;
       MAD::LiquidXenon *fLXe;
 
@@ -21,7 +21,7 @@ class XMASS835kg : public LXeDetector
             const char *title="XMASS 835kg");
       ~XMASS835kg();
 
-      TH1D* HTrgEff();
+      TH1D* HEff();
       Double_t Acceptance(Double_t Enr);
 
       ClassDef(XMASS835kg,1);
