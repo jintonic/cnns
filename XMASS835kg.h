@@ -22,7 +22,7 @@ class XMASS835kg : public LXeDetector
       ~XMASS835kg();
 
       TH1D* HTrgEff();
-      Double_t TriggerEfficiency(Double_t Enr);
+      Double_t Acceptance(Double_t Enr);
 
       ClassDef(XMASS835kg,1);
 };

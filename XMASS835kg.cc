@@ -88,7 +88,7 @@ TH1D* XMASS835kg::HTrgEff()
    }
 
    fHTrgEff->SetXTitle("nuclear recoil energy [keV]");
-   fHTrgEff->SetYTitle("trigger efficiency");
+   fHTrgEff->SetYTitle("acceptance");
    fHTrgEff->SetStats(0);
 
    return fHTrgEff;
@@ -97,7 +97,7 @@ TH1D* XMASS835kg::HTrgEff()
 //______________________________________________________________________________
 //
 
-Double_t XMASS835kg::TriggerEfficiency(Double_t Enr)
+Double_t XMASS835kg::Acceptance(Double_t Enr)
 {
    return HTrgEff()->Interpolate(Enr/keV);
 }
