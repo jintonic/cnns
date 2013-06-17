@@ -1,13 +1,9 @@
 #include "SupernovaExperiment.h"
-#include "LXeDetector.h"
+#include "XMASS835kg.h"
 
 #include <NEUS/NakazatoModel.h>
 #include <NEUS/LivermoreModel.h>
 using namespace NEUS;
-
-#include <MAD/NaturalXe.h>
-#include <MAD/LiquidXenon.h>
-using namespace MAD;
 
 #include <UNIC/Units.h>
 using namespace UNIC;
@@ -40,15 +36,7 @@ int main ()
 
 
    // set up experiment
-   NaturalXe *natXe = new NaturalXe;
-   LiquidXenon *LXe = new LiquidXenon;
-   LXe->AddElement(natXe,1);
-
-   LXeDetector *xmass = new LXeDetector("XMASS","XMASS experiment");
-   xmass->SetTargetMaterial(LXe);
-   xmass->SetTargetMass(835*kg);
-   xmass->SetLightYield(14.7*PE/keV);
-   xmass->SetThreshold(0*PE);
+   XMASS835kg *xmass = new XMASS835kg;
    Printf("Threshold corresponding to 0 PE in XMASS: %.4f keVnr",
          xmass->Threshold()/keV);
 
@@ -183,6 +171,10 @@ int main ()
    leg->AddEntry(hc,"0 keVee","l");
    leg->AddEntry(hT,"0.3 keVee","l");
    leg->Draw();
+   can->Print("XMASS.ps");
+
+   can->SetLogx(0);
+   xmass->HTrgEff()->Draw("E0");
    can->Print("XMASS.ps");
 
    can->Print("XMASS.ps]");
