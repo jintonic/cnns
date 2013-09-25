@@ -26,6 +26,10 @@ int main ()
    NakazatoModel *blackHole = new NakazatoModel(30,0.004);
    blackHole->LoadData("../neus");
 
+   // model close to Betelgeuse
+   NakazatoModel *betelgeuse = new NakazatoModel(13,0.02,100);
+   betelgeuse->LoadData("../neus");
+
    // Totani's Livermore model
    LivermoreModel *totani = new LivermoreModel;
    totani->LoadData("../total");
@@ -222,6 +226,17 @@ int main ()
    can->Print("XMASS.ps");
 
    xmass4sn->SetSupernovaModel(model3003);
+   xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
+   hT0 = xmass4sn->HNevtT(0)->DrawCopy();
+   hT0->SetLineColor(kBlue);
+   hT1 = xmass4sn->HNevtT(0,kTRUE);
+   hT1->SetLineColor(kRed);
+   hT1->Draw("same");
+
+   leg->Draw();
+   can->Print("XMASS.ps");
+
+   xmass4sn->SetSupernovaModel(betelgeuse);
    xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
    hT0 = xmass4sn->HNevtT(0)->DrawCopy();
    hT0->SetLineColor(kBlue);
