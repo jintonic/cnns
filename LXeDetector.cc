@@ -20,7 +20,7 @@ void LXeDetector::SetThreshold(Double_t threshold)
       return;
    }
    TString material(fMaterial->GetName());
-   if (material.EqualTo("LXe")==kFALSE) {
+   if (material.CompareTo("LXe")!=0) {
       Warning("SetThreshold","Target material is not LXe!");
       Warning("SetThreshold","Simply set fThreshold to threshold.");
       fThreshold = threshold;
