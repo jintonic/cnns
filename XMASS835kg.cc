@@ -1,4 +1,5 @@
 #include "XMASS835kg.h"
+using namespace CNNS;
 
 #include <TH1D.h>
 
@@ -6,22 +7,17 @@
 #include <MAD/LiquidXenon.h>
 using namespace MAD;
 
-#include <UNIC/Units.h>
-using namespace UNIC;
-
 //______________________________________________________________________________
 //
 
 XMASS835kg::XMASS835kg(const char *name, const char *title) :
    LXeDetector(name, title), fHEff(0)
 {
-   fNatXe = new NaturalXe;
-   fLXe = new LiquidXenon;
-   fLXe->AddElement(fNatXe,1);
+   TargetMaterial = new LiquidXenon;
+   TargetMaterial->AddElement(new NaturalXe,1);
 
-   SetTargetMaterial(fLXe);
-   SetTargetMass(835*kg);
-   SetLightYield(14.7*PE/keV);
+   TargetMass=835*kg;
+   LightYield=14.7*PE/keV;
    SetThreshold(0*PE);
 }
 
@@ -30,8 +26,7 @@ XMASS835kg::XMASS835kg(const char *name, const char *title) :
 
 XMASS835kg::~XMASS835kg()
 {
-   if (fNatXe) delete fNatXe;
-   if (fLXe) delete fLXe;
+   if (TargetMaterial) delete TargetMaterial;
    if (fHEff) delete fHEff;
 }
 

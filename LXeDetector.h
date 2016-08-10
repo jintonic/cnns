@@ -1,9 +1,11 @@
-#ifndef LXEDETECTOR_H
-#define LXEDETECTOR_H
+#ifndef CNNS_LXEDETECTOR_H
+#define CNNS_LXEDETECTOR_H
 
 #include "ScintillationDetector.h"
 
-class LXeDetector : public ScintillationDetector
+namespace CNNS { class LXeDetector; }
+
+class CNNS::LXeDetector : public CNNS::ScintillationDetector
 {
    public:
       LXeDetector() : ScintillationDetector() {};

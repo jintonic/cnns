@@ -1,16 +1,16 @@
 #include "SupernovaExperiment.h"
 #include "XMASS835kg.h"
+using namespace CNNS;
 
 #include <NEUS/NakazatoModel.h>
 #include <NEUS/LivermoreModel.h>
 using namespace NEUS;
 
-#include <UNIC/Units.h>
-using namespace UNIC;
-
 #include <TH2D.h>
 #include <TCanvas.h>
 #include <TLegend.h>
+#include <TROOT.h>
+#include <TStyle.h>
 
 int main ()
 {
@@ -43,8 +43,8 @@ int main ()
 
    // set up experiment
    SupernovaExperiment *xmass4sn = new SupernovaExperiment(xmass);
-   xmass4sn->SetDistance(196.22*pc); // Betelgeuse
-   xmass4sn->SetDistance(10*kpc); // galaxy center
+   xmass4sn->Distance=10*kpc; // galaxy center
+   xmass4sn->Distance=196.22*pc; // Betelgeuse
 
 
    // draw results
@@ -180,8 +180,8 @@ int main ()
       hN1[j]->Draw("same");
 
       if (j==0) {
-         leg->AddEntry(hN0[j],"All events","l");
-         leg->AddEntry(hN1[j],"Detected events","l");
+         leg->AddEntry(hN0[j],"All events above 1 keV","l");
+         leg->AddEntry(hN1[j],"Observable events","l");
       }
       leg->Draw();
 
@@ -204,21 +204,11 @@ int main ()
    hN->Draw("colz");
    can->Print("XMASS.ps");
 
+   xmass4sn->SetSupernovaModel(model2001);
    xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
    TH1 *hT0 = xmass4sn->HNevtT(0)->DrawCopy();
    hT0->SetLineColor(kBlue);
    TH1D *hT1 = xmass4sn->HNevtT(0,kTRUE);
-   hT1->SetLineColor(kRed);
-   hT1->Draw("same");
-
-   leg->Draw();
-   can->Print("XMASS.ps");
-
-   xmass4sn->SetSupernovaModel(model2001);
-   xmass4sn->HNevtT(0)->GetXaxis()->SetRangeUser(1.8e-2,17.9012);
-   hT0 = xmass4sn->HNevtT(0)->DrawCopy();
-   hT0->SetLineColor(kBlue);
-   hT1 = xmass4sn->HNevtT(0,kTRUE);
    hT1->SetLineColor(kRed);
    hT1->Draw("same");
 
@@ -248,4 +238,43 @@ int main ()
    can->Print("XMASS.ps");
 
    can->Print("XMASS.ps]");
+
+   // generate plot for svx paper
+   gROOT->SetStyle("Plain");
+   gStyle->SetLegendBorderSize(0);
+   gStyle->SetLegendFont(22);
+   gStyle->SetTitleBorderSize(0);
+   gStyle->SetLabelFont(22,"XYZ");
+   gStyle->SetTitleFont(22,"H");
+   gStyle->SetTitleFont(22,"XYZ");
+   gStyle->SetLabelSize(0.05,"XYZ");
+   gStyle->SetTitleSize(0.05,"XYZ");
+   gStyle->SetTitleOffset(1.1,"Y");
+   gStyle->SetTitleOffset(-0.5,"Z");
+   gStyle->SetPadRightMargin(0.02);
+   gStyle->SetPadLeftMargin(0.12);
+   gStyle->SetPadTopMargin(0.02);
+   gStyle->SetPadBottomMargin(0.11);
+   gROOT->ForceStyle();
+   TCanvas *c = new TCanvas;
+
+   xmass4sn->SetSupernovaModel(totani);
+   xmass4sn->Distance=196.22*pc; // Betelgeuse
+
+   hT0 = xmass4sn->HNevtT(0)->DrawCopy();
+   hT0->GetXaxis()->SetRangeUser(0,10.5);
+   hT0->GetYaxis()->SetTitle("(rate of events)/second/(832 kg)");
+   hT0->SetTitle("");
+   hT0->SetLineColor(kBlue);
+   hT1 = xmass4sn->HNevtT(0,kTRUE);
+   hT1->SetLineColor(kRed);
+   hT1->Draw("same");
+
+   TLegend *l = new TLegend(0.4,0.6,0.88,0.88);
+   l->SetHeader("Livermore Model");
+   l->AddEntry(hT0,"All events above 1 keV","l");
+   l->AddEntry(hT1,"Observable events","l");
+   l->Draw();
+   c->Print("rate0.eps");
+   c->Print("rate0.pdf");
 }

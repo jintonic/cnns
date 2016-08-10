@@ -1,22 +1,21 @@
-#ifndef SCINTILLATIONDETECTOR_H
-#define SCINTILLATIONDETECTOR_H
+#ifndef CNNS_SCINTILLATIONDETECTOR_H
+#define CNNS_SCINTILLATIONDETECTOR_H
 
 #include "Detector.h"
 
-class ScintillationDetector : public Detector
+namespace CNNS { class ScintillationDetector; }
+
+class CNNS::ScintillationDetector : public CNNS::Detector
 {
-   protected:
-      Double_t fLightYield;
+   public:
+      Double_t LightYield;
 
    public:
-      ScintillationDetector() : Detector(), fLightYield(0) {};
+      ScintillationDetector() : Detector(), LightYield(0) {};
       ScintillationDetector(const char *name, const char *title) :
-         Detector(name, title), fLightYield(0) {};
+         Detector(name, title), LightYield(0) {};
 
       virtual ~ScintillationDetector() {};
-
-      void SetLightYield(Double_t yield) { fLightYield=yield; }
-      Double_t LightYield() { return fLightYield; }
 
       ClassDef(ScintillationDetector,1);
 };

@@ -1,20 +1,16 @@
-#ifndef XMASS835KG_H
-#define XMASS835KG_H
+#ifndef CNNS_XMASS835KG_H
+#define CNNS_XMASS835KG_H
 
 #include "LXeDetector.h"
 
 class TH1D;
-namespace MAD {
-   class NaturalXe;
-   class LiquidXenon;
-}
 
-class XMASS835kg : public LXeDetector
+namespace CNNS { class XMASS835kg; }
+
+class CNNS::XMASS835kg : public CNNS::LXeDetector
 {
    private:
       TH1D *fHEff;
-      MAD::NaturalXe *fNatXe;
-      MAD::LiquidXenon *fLXe;
 
    public:
       XMASS835kg(const char *name="XMASS835kg",

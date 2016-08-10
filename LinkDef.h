@@ -1,7 +1,8 @@
 #ifdef __MAKECINT__
-#pragma link C++ class Detector+;
-#pragma link C++ class ScintillationDetector+;
-#pragma link C++ class LXeDetector+;
-#pragma link C++ class XMASS835kg+;
-#pragma link C++ class SupernovaExperiment+;
+#pragma link C++ namespace CNNS;
+#pragma link C++ class CNNS::Detector+;
+#pragma link C++ class CNNS::ScintillationDetector+;
+#pragma link C++ class CNNS::LXeDetector+;
+#pragma link C++ class CNNS::XMASS835kg+;
+#pragma link C++ class CNNS::SupernovaExperiment+;
 #endif
