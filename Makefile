@@ -78,7 +78,7 @@ SRCS = $(wildcard *.C)
 EXES = $(SRCS:.C=.exe)
 
 SOURCES = $(filter-out $(ROOTIFIED_SOURCE), $(wildcard *.cc))
-HEADERS = $(SOURCES:.cc=.h)
+HEADERS = $(filter-out $(ROOTIFIED_HEADER) $(LINKDEF), $(wildcard *.h))
 OBJECTS = $(SOURCES:.cc=.o)
 DEPFILE = $(SOURCES:.cc=.d)
 
