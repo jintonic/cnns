@@ -263,7 +263,7 @@ int main ()
 
    hT0 = xmass4sn->HNevtT(0)->DrawCopy();
    hT0->GetXaxis()->SetRangeUser(0,10.5);
-   hT0->GetYaxis()->SetTitle("(rate of events)/second/(832 kg)");
+   hT0->GetYaxis()->SetTitle("(number of events)/second/(832 kg)");
    hT0->SetTitle("");
    hT0->SetLineColor(kBlue);
    hT1 = xmass4sn->HNevtT(0,kTRUE);
