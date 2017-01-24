@@ -11,11 +11,12 @@ using namespace NEUS;
 #include <TLegend.h>
 #include <TROOT.h>
 #include <TStyle.h>
+#include <TFile.h>
 
 int main ()
 {
    // the weakest sn in Nakazato model
-   NakazatoModel *model2001 = new NakazatoModel(20,0.02,100);
+   NakazatoModel *model2001 = new NakazatoModel(20,0.02,200);
    model2001->LoadData("../neus");
 
    // the brightest sn in Nakazato model
@@ -43,8 +44,8 @@ int main ()
 
    // set up experiment
    SupernovaExperiment *xmass4sn = new SupernovaExperiment(xmass);
-   xmass4sn->Distance=10*kpc; // galaxy center
    xmass4sn->Distance=196.22*pc; // Betelgeuse
+   xmass4sn->Distance=10*kpc; // galaxy center
 
 
    // draw results
@@ -111,6 +112,12 @@ int main ()
    // weakest Nakazato Model
    xmass4sn->SetSupernovaModel(model2001);
    h0 = xmass4sn->HNevtE(0);
+   h0->SetName("h");
+   h0->Draw();
+   TFile *file = new TFile("Nakazato.root","recreate");
+   h0->Write();
+   file->Close();
+
    h1 = xmass4sn->HNevtE(1);
    h2 = xmass4sn->HNevtE(2);
    h3 = xmass4sn->HNevtE(3);
@@ -266,6 +273,8 @@ int main ()
    hT0->GetYaxis()->SetTitle("(number of events)/second/(832 kg)");
    hT0->SetTitle("");
    hT0->SetLineColor(kBlue);
+   hT0->SetLineWidth(2);
+   hT0->SetLineStyle(kDashed);
    hT1 = xmass4sn->HNevtT(0,kTRUE);
    hT1->SetLineColor(kRed);
    hT1->Draw("same");
