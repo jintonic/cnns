@@ -17,3 +17,5 @@
 *.rootmap
 *.ps
 *Dict*
+
+*.root
