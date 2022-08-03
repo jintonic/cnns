@@ -60,10 +60,8 @@ CXXFLAGS+= -I$(UNIC)/include -I$(NEUS)/include -I$(MAD)/include -g
 LIBS     = $(ROOTLIBS) -L$(NEUS)/lib -lNEUS -lTOTAL -L$(MAD) -lMAD
 
 
-# Define things related to rootcint
+# Define things related to rootcling
 # =================================
-
-ROOTCINT = rootcint
 
 LIBNAME := CNNS
 ROOTIFIED_SOURCE := $(LIBNAME)Dict.cc
@@ -102,16 +100,13 @@ DEPENDS = $(shell symbols=$(SYMBOLS); \
 	  echo $$so;\
 	  done | sort -u | tr '\n' ' ')
 
-RLIBMAP = rlibmap
-
-
 # Action starts
 # =============
 
 # the first target is the default target, it depends on $(ROOTMAP)
 # before "make all", make will include all other makefiles specified
 # by the include command
-all: install $(EXES)
+all: $(EXES)
 	@echo
 	@echo "* Done!"
 	@echo 
@@ -128,15 +123,6 @@ endif
 	  $(CXX) -MM $(CPPFLAGS) $< > $@.$$$$; \
 	  sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
 	  rm -f $@.$$$$ 
-
-# lib$(LIBNAME).rootmap can only be created after the creation of lib$(LIBNAME).so. It
-# tells ROOT the dependence among libraries. Putting it along with the
-# corresponding library allows one to use in CINT the functions defined in the
-# library without calling gSystem->Load("lib.so")
-$(ROOTMAP): $(LIBRARY)
-	@echo
-	@echo "* Creating rootmap file:"
-	$(RLIBMAP) -o $(ROOTMAP) -l $(LIBRARY) -d $(DEPENDS) -c $(LINKDEF)
 
 # lib$(LIBNAME).so depends on all *.o files.
 #  The flag "-shared" is used to create shared libs
@@ -157,7 +143,7 @@ $(ROOTIFIED_SOURCE): $(HEADERS) $(LINKDEF)
 	@echo 
 	@echo "* Rootifying files:" 
 	@rm -f $(ROOTIFIED_SOURCE) $(ROOTIFIED_HEADER) 
-	$(ROOTCINT) $(ROOTIFIED_SOURCE) -c -p $(CXXFLAGS) $(HEADERS) $(LINKDEF)
+	rootcling -f $@ -cxxflags="$(CXXFLAGS)" -s lib$(LIBNAME) -rml lib$(LIBNAME) -rmf $(ROOTMAP) $^
 	@echo 
 	@echo "* Creating object files:" 
 
@@ -179,7 +165,7 @@ clean:
 tags:
 	ctags --c-kinds=+p $(HEADERS) $(SOURCES)
 
-install: $(ROOTMAP)
+install: $(LIBRARY)
 	@echo
 	@echo "* Installing library to PREFIX=$(PREFIX)"
 	@echo -n "checking if $(PREFIX) exists..."
